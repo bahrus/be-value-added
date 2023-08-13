@@ -3,7 +3,7 @@ export class BeValueAdded extends BE {
     #mutationObserver;
     #skipParsingAttrChange = false;
     #skipSettingAttr = false;
-    async hydrate(self) {
+    hydrate(self) {
         const { enhancedElement, observeAttr, value } = self;
         if (observeAttr) {
             const mutOptions = {
@@ -15,7 +15,7 @@ export class BeValueAdded extends BE {
                     self.#skipParsingAttrChange = false;
                     return;
                 }
-                self.parseAttr(self);
+                Object.assign(self, self.parseAttr(self));
             });
             self.#mutationObserver.observe(enhancedElement, mutOptions);
         }
@@ -26,9 +26,7 @@ export class BeValueAdded extends BE {
                 enhancedElement.ariaLive = 'polite';
                 break;
         }
-        if (value === undefined) {
-            self.parseAttr(self);
-        }
+        return value === undefined ? self.parseAttr(self) : { resolved: true };
     }
     get attr() {
         switch (this.enhancedElement.localName) {

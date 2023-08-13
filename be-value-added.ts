@@ -1,6 +1,6 @@
 import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
 import {BVAAllProps, BVAActions} from './types.js';
-import { IEnhancement } from '../be-enhanced/types.js';
+import { IEnhancement } from 'be-enhanced/types.js';
 import {XEArgs, PropInfoExt} from 'xtal-element/types';
 import {Action} from 'trans-render/lib/types';
 
@@ -9,7 +9,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
     #skipParsingAttrChange = false;
     #skipSettingAttr = false;
 
-    async hydrate(self: this){
+    hydrate(self: this){
         const {enhancedElement, observeAttr, value} = self;
         if(observeAttr){
             const mutOptions: MutationObserverInit = {
@@ -21,7 +21,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
                     self.#skipParsingAttrChange = false;
                     return;
                 }
-                self.parseAttr(self);
+                Object.assign(self, self.parseAttr(self));
             });
             self.#mutationObserver.observe(enhancedElement, mutOptions);
         }
@@ -32,9 +32,8 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
                 enhancedElement.ariaLive = 'polite';
                 break;
         }
-        if(value === undefined){
-            self.parseAttr(self);
-        }
+        return value === undefined ? self.parseAttr(self) : {resolved: true};
+    
         
     }
 
