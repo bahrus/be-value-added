@@ -1,10 +1,14 @@
 import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
 import {BVAAllProps, BVAActions} from './types.js';
+import { IEnhancement } from '../be-enhanced/types.js';
+import {XEArgs, PropInfoExt} from 'xtal-element/types';
+import {Action} from 'trans-render/lib/types';
 
 export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement> implements BVAActions{
     #mutationObserver: MutationObserver | undefined;
     #skipParsingAttrChange = false;
     #skipSettingAttr = false;
+
     async hydrate(self: this){
         const {enhancedElement, observeAttr, value} = self;
         if(observeAttr){
@@ -17,7 +21,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
                     self.#skipParsingAttrChange = false;
                     return;
                 }
-                self.calcVal(self);
+                self.parseAttr(self);
             });
             self.#mutationObserver.observe(enhancedElement, mutOptions);
         }
@@ -29,7 +33,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
                 break;
         }
         if(value === undefined){
-            self.calcVal(self);
+            self.parseAttr(self);
         }
         
     }
@@ -53,7 +57,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
         if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
     }
 
-    calcVal(self: this): Partial<BVAAllProps> {
+    parseAttr(self: this): Partial<BVAAllProps> {
         const {enhancedElement} = self;
         self.#skipSettingAttr = true;
         if(enhancedElement instanceof HTMLMetaElement){
@@ -108,9 +112,9 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
                 resolved: true,
             }
         
-        }else if(enhancedElement instanceof HTMLOutputElement){
+        }else if(enhancedElement instanceof HTMLTimeElement){
             return {
-                value: enhancedElement.value,
+                value: Date.parse(enhancedElement.dateTime),
                 resolved: true,
             }
         }else{
@@ -140,3 +144,23 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
 }
 
 export interface BeValueAdded extends BVAAllProps{}
+
+export const beValueAddedPropDefaults: Partial<BVAAllProps> = {
+    attached: true,
+}
+
+export const beValueAddedPropInfo: Partial<{[key in keyof BVAAllProps]: PropInfoExt<IEnhancement>}> = {
+    ...propInfo,
+    value:{
+        notify:{
+            dispatch: true,
+        }
+    }
+};
+
+export const beValueAddedActions = {
+    hydrate: 'attached',
+    onValChange:{
+        ifKeyIn: ['value']
+    }
+} as Partial<{[key in keyof BVAActions]: Action<BVAAllProps> | keyof BVAAllProps}>;

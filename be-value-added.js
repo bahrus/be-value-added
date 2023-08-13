@@ -1,4 +1,4 @@
-import { BE } from 'be-enhanced/BE.js';
+import { BE, propInfo } from 'be-enhanced/BE.js';
 export class BeValueAdded extends BE {
     #mutationObserver;
     #skipParsingAttrChange = false;
@@ -15,7 +15,7 @@ export class BeValueAdded extends BE {
                     self.#skipParsingAttrChange = false;
                     return;
                 }
-                self.calcVal(self);
+                self.parseAttr(self);
             });
             self.#mutationObserver.observe(enhancedElement, mutOptions);
         }
@@ -27,7 +27,7 @@ export class BeValueAdded extends BE {
                 break;
         }
         if (value === undefined) {
-            self.calcVal(self);
+            self.parseAttr(self);
         }
     }
     get attr() {
@@ -48,7 +48,7 @@ export class BeValueAdded extends BE {
         if (this.#mutationObserver !== undefined)
             this.#mutationObserver.disconnect();
     }
-    calcVal(self) {
+    parseAttr(self) {
         const { enhancedElement } = self;
         self.#skipSettingAttr = true;
         if (enhancedElement instanceof HTMLMetaElement) {
@@ -105,9 +105,9 @@ export class BeValueAdded extends BE {
                 resolved: true,
             };
         }
-        else if (enhancedElement instanceof HTMLOutputElement) {
+        else if (enhancedElement instanceof HTMLTimeElement) {
             return {
-                value: enhancedElement.value,
+                value: Date.parse(enhancedElement.dateTime),
                 resolved: true,
             };
         }
@@ -136,3 +136,20 @@ export class BeValueAdded extends BE {
         this.#skipSettingAttr = false;
     }
 }
+export const beValueAddedPropDefaults = {
+    attached: true,
+};
+export const beValueAddedPropInfo = {
+    ...propInfo,
+    value: {
+        notify: {
+            dispatch: true,
+        }
+    }
+};
+export const beValueAddedActions = {
+    hydrate: 'attached',
+    onValChange: {
+        ifKeyIn: ['value']
+    }
+};

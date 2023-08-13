@@ -7,7 +7,7 @@ export interface BVAEndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement |
 }
 
 export interface BVAAllProps extends BVAEndUserProps{
-    //output: Output
+    attached?: boolean;
 }
 
 // export interface Output{
@@ -19,6 +19,6 @@ export type BVAP = Partial<BVAAllProps>
 
 export interface BVAActions{
     hydrate(self: this): void;
-    calcVal(self: this): BVAP;
+    parseAttr(self: this): BVAP;
     onValChange(self: this): void;
 }
