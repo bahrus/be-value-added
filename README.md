@@ -1,6 +1,6 @@
 # be-value-added
 
-The output element provides an example of a built-in element that "outputs" its value.  It's a bit of a strange feature, given that it displays the exact value passed in, but the "value-add" proposition the output element provides may be bit esoteric (a11y related).
+The output element provides an example of a built-in element that "outputs" its value.  It's a bit of a strange feature, given that it displays the exact value passed in, but the "value-add" proposition the output element provides may be a bit esoteric (a11y related).
 
 Anyway, the model / precedent that the output element provides seems quite useful, when applied to elements that may do a bit more than simply display the value.  In particular, elements that format the value, based on Intl.* settings.
 
@@ -10,4 +10,4 @@ Note that this does *not* add or modify the value property onto the enhanced ele
 
 1.  Be able to be passed a value
 2.  Reflect that value in some way to an attribute and/or text content of the element.
-3.  Optionally be able to observe the attribute for modifications from other causes, and sync that back up with the value.
+3.  Optionally be able to observe the attribute for modifications from other sources, and sync that back up with the value.

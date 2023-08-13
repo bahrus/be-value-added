@@ -4,11 +4,18 @@
   "description": "The output element provides an example of a built-in element that \"outputs\" its value.  It's a bit of a strange feature, given that it displays the exact value passed in, but the \"value-add\" proposition the output element provides may be bit esoteric (a11y related).",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "serve": "node node_modules/may-it-serve/serve.js",
+    "safari": "npx playwright wk http://localhost:3030",
+    "update": "ncu -u && npm install"
   },
   "dependencies": {
     "be-enhanced": "0.0.36",
     "trans-render": "0.0.699"
+  },
+  "devDependencies": {
+    "may-it-serve": "0.0.5",
+    "@playwright/test": "1.36.2"
   },
   "author": "",
   "license": "MIT"

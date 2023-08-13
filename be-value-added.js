@@ -1,19 +1,17 @@
-import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
-import {BVAAllProps, BVAActions} from './types.js';
-
-export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement> implements BVAActions{
-    #mutationObserver: MutationObserver | undefined;
+import { BE } from 'be-enhanced/BE.js';
+export class BeValueAdded extends BE {
+    #mutationObserver;
     #skipParsingAttrChange = false;
     #skipSettingAttr = false;
-    async hydrate(self: this){
-        const {enhancedElement, observeAttr, value} = self;
-        if(observeAttr){
-            const mutOptions: MutationObserverInit = {
+    async hydrate(self) {
+        const { enhancedElement, observeAttr, value } = self;
+        if (observeAttr) {
+            const mutOptions = {
                 attributeFilter: [self.attr],
                 attributes: true
             };
-            self.#mutationObserver = new MutationObserver((/*mutations: MutationRecord[]*/) => {
-                if(self.#skipParsingAttrChange){
+            self.#mutationObserver = new MutationObserver(( /*mutations: MutationRecord[]*/) => {
+                if (self.#skipParsingAttrChange) {
                     self.#skipParsingAttrChange = false;
                     return;
                 }
@@ -21,21 +19,19 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
             });
             self.#mutationObserver.observe(enhancedElement, mutOptions);
         }
-        const {localName} = enhancedElement;
-        switch(localName){
+        const { localName } = enhancedElement;
+        switch (localName) {
             case 'data':
             case 'time':
                 enhancedElement.ariaLive = 'polite';
                 break;
         }
-        if(value === undefined){
+        if (value === undefined) {
             self.calcVal(self);
         }
-        
     }
-
-    get attr(){
-        switch(this.enhancedElement.localName){
+    get attr() {
+        switch (this.enhancedElement.localName) {
             case 'link':
                 return 'href';
             case 'meta':
@@ -48,18 +44,17 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
                 return 'value';
         }
     }
-
-    override detach(detachedElement: HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLOutputElement | HTMLTimeElement): void {
-        if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
+    detach(detachedElement) {
+        if (this.#mutationObserver !== undefined)
+            this.#mutationObserver.disconnect();
     }
-
-    calcVal(self: this): Partial<BVAAllProps> {
-        const {enhancedElement} = self;
+    calcVal(self) {
+        const { enhancedElement } = self;
         self.#skipSettingAttr = true;
-        if(enhancedElement instanceof HTMLMetaElement){
+        if (enhancedElement instanceof HTMLMetaElement) {
             const type = enhancedElement.getAttribute('itemtype');
             const content = enhancedElement.content;
-            switch(type){
+            switch (type) {
                 case 'https://schema.org/Number':
                     return {
                         value: Number(content),
@@ -74,69 +69,70 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
                     return {
                         value: parseFloat(content),
                         resolved: true,
-                    }
+                    };
                 default:
                     return {
                         value: content,
                         resolved: true,
-                    }
+                    };
             }
-        }else if (enhancedElement instanceof HTMLLinkElement){
+        }
+        else if (enhancedElement instanceof HTMLLinkElement) {
             const split = (enhancedElement.href).split('/');
             const lastVal = split.at(-1);
             self.#skipParsingAttrChange = true;
-            switch(lastVal){
+            switch (lastVal) {
                 case 'True':
                     return {
                         value: true,
                         resolved: true,
-                    }
+                    };
                 case 'False':
                     return {
                         value: false,
                         resolved: true,
-                    }
+                    };
                 default:
                     return {
                         value: lastVal,
                         resolved: true,
-                    }
+                    };
             }
-        }else if(enhancedElement instanceof HTMLDataElement){
+        }
+        else if (enhancedElement instanceof HTMLDataElement) {
             return {
                 value: JSON.parse(enhancedElement.value),
                 resolved: true,
-            }
-        
-        }else if(enhancedElement instanceof HTMLOutputElement){
+            };
+        }
+        else if (enhancedElement instanceof HTMLOutputElement) {
             return {
                 value: enhancedElement.value,
                 resolved: true,
-            }
-        }else{
+            };
+        }
+        else {
             return {
                 resolved: false,
-            }
+            };
         }
     }
-
-    onValChange(self: this) {
-        const {value} = self;
-        if(value === undefined || value === null){
+    onValChange(self) {
+        const { value } = self;
+        if (value === undefined || value === null) {
             return;
         }
-        const {enhancedElement} = self;
-        if(!this.#skipSettingAttr){
-            if(enhancedElement instanceof HTMLMetaElement){
+        const { enhancedElement } = self;
+        if (!this.#skipSettingAttr) {
+            if (enhancedElement instanceof HTMLMetaElement) {
                 enhancedElement.content = value.toString();
-            }else if(enhancedElement instanceof HTMLLinkElement){
+            }
+            else if (enhancedElement instanceof HTMLLinkElement) {
                 const urlVal = value === true ? 'True' :
-                value === false ? 'False' : value;
+                    value === false ? 'False' : value;
                 enhancedElement.href = 'https://schema.org/' + urlVal;
             }
         }
         this.#skipSettingAttr = false;
     }
 }
-
-export interface BeValueAdded extends BVAAllProps{}
