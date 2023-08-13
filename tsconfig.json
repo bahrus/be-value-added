@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"sourceMap": false,
+		"experimentalDecorators": false,
+		"forceConsistentCasingInFileNames": true,
+		"newLine": "LF",
+		"strict": true,
+	},
+	"files":[
+		"be-value-added.ts"
+	],
+	"exclude":[
+		"node_modules"
+	]
+
+}
