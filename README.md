@@ -9,7 +9,7 @@ The [output element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/o
 Anyway, the model / precedent that the output element provides seems quite useful, when applied to elements that may do a bit more than simply display the value.  In particular, elements that format the value, based on Intl.* settings, or elements that reflect values to metadata attributes (meta, link tags).
 
 ```html
-<time id=time   be-value-added></time>
+<time id=time  be-value-added></time>
 <data id=data  be-value-added></data>
 <meta id=meta  be-value-added>
 <link id=link  be-value-added>
