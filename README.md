@@ -8,7 +8,14 @@ The [output element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/o
 
 Anyway, the model / precedent that the output element provides seems quite useful, when applied to elements that may do a bit more than simply display the value.  In particular, elements that format the value, based on Intl.* settings, or elements that reflect values to metadata attributes (meta, link tags).
 
-This package contains a base class that helps implement such features in userland using custom [enhancements](https://github.com/bahrus).  This package  provides end-user capabilities in it own right.
+```html
+<time id=time   be-value-added></time>
+<data id=data  be-value-added></data>
+<meta id=meta  be-value-added>
+<link id=link  be-value-added>
+```
+
+This package contains a base class that helps implement such features in userland using custom [enhancements](https://github.com/bahrus).  This package  also provides end-user capabilities in its own right.
 
 Note that this does *not* add or modify the value property onto the enhanced element (top level).  It just provides a uniform interface for multiple enhancements, all of which need to:
 
