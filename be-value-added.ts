@@ -6,6 +6,13 @@ import {XEArgs, PropInfoExt} from 'xtal-element/types';
 import {Action} from 'trans-render/lib/types.js';
 import { register } from 'be-hive/register.js';
 
+function tryJSONParse(s: string){
+    try{
+        return JSON.parse(s);
+    }catch(e){
+        return undefined;
+    }
+}
 export class BeValueAdded<TElement extends Element = TMicroElement> extends BE<BVAAllProps, BVAActions, TElement> implements BVAActions{
     #mutationObserver: MutationObserver | undefined;
     #skipParsingAttrChange = false;
@@ -13,7 +20,7 @@ export class BeValueAdded<TElement extends Element = TMicroElement> extends BE<B
 
     hydrate(self: this){
         const {enhancedElement, observeAttr, value} = self;
-        if(observeAttr){
+        if(observeAttr !== false){
             const mutOptions: MutationObserverInit = {
                 attributeFilter: [self.attr],
                 attributes: true
@@ -109,7 +116,7 @@ export class BeValueAdded<TElement extends Element = TMicroElement> extends BE<B
             }
         }else if(enhancedElement instanceof HTMLDataElement){
             return {
-                value: JSON.parse(enhancedElement.value),
+                value: tryJSONParse(enhancedElement.value),
                 resolved: true,
             }
         
@@ -143,6 +150,8 @@ export class BeValueAdded<TElement extends Element = TMicroElement> extends BE<B
         this.#skipSettingAttr = false;
     }
 }
+
+
 
 export interface BeValueAdded extends BVAAllProps{}
 

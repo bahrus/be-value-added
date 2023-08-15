@@ -6,10 +6,31 @@
     <title>Document</title>
 </head>
 <body>
-    <time></time>
-    <data></data>
-    <output></output>
-    <meta>
-    <link>
+    <time id=time></time>
+    <data id=data></data>
+    <meta id=meta>
+    <link id=link>
+
+    <script type=importmap>
+        {
+            "imports": {
+                "be-enhanced/": "../node_modules/be-enhanced/",
+                "be-hive/":  "../node_modules/be-hive/",
+                "be-propagating/": "../node_modules/be-propagating/",
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../be-value-added.js'
+    </script>
+    <script type=module>
+        await customElements.whenDefined('be-enhanced');
+        time.beEnhanced.by.beValueAdded.value = new Date();
+        data.beEnhanced.by.beValueAdded.value = 13456789;
+        meta.beEnhanced.by.beValueAdded.value = 'hello';
+        link.beEnhanced.by.beValueAdded.value = true;
+    </script>
 </body>
 </html>

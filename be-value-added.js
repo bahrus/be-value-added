@@ -1,13 +1,21 @@
 import { BE, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
+function tryJSONParse(s) {
+    try {
+        return JSON.parse(s);
+    }
+    catch (e) {
+        return undefined;
+    }
+}
 export class BeValueAdded extends BE {
     #mutationObserver;
     #skipParsingAttrChange = false;
     #skipSettingAttr = false;
     hydrate(self) {
         const { enhancedElement, observeAttr, value } = self;
-        if (observeAttr) {
+        if (observeAttr !== false) {
             const mutOptions = {
                 attributeFilter: [self.attr],
                 attributes: true
@@ -101,7 +109,7 @@ export class BeValueAdded extends BE {
         }
         else if (enhancedElement instanceof HTMLDataElement) {
             return {
-                value: JSON.parse(enhancedElement.value),
+                value: tryJSONParse(enhancedElement.value),
                 resolved: true,
             };
         }
