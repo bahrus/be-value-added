@@ -16,3 +16,30 @@ Note that this does *not* add or modify the value property onto the enhanced ele
 2.  Reflect that value in some way to an attribute and/or text content of the element.
 3.  Optionally be able to observe the attribute for modifications from other sources, and sync that back up with the value.
 
+## Running locally
+
+Any web server than can serve static files will do, but...
+
+1.  Install git.
+2.  Do a git clone or a git fork of repository https://github.com/bahrus/be-value-added
+3.  Install node.js
+4.  Open command window to folder where you cloned this repo.
+5.  > npm install
+6.  > npm run serve
+7.  Open http://localhost:3030/demo in a modern browser.
+
+## Using from ESM Module:
+
+```JavaScript
+import 'be-value-added/be-value-added.js';
+```
+
+## Using from CDN:
+
+```html
+<script type=module crossorigin=anonymous>
+    import 'https://esm.run/be-value-added';
+</script>
+```
+
+
