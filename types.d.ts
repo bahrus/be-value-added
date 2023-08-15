@@ -1,7 +1,9 @@
 import { ActionOnEventConfigs } from "trans-render/froop/types";
 import {IBE, Declarations} from 'be-enhanced/types';
 
-export interface BVAEndUserProps<TElement = HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement, TValue = string | boolean | number | Date> extends IBE<TElement>{
+export type TMicroElement = HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement;
+
+export interface BVAEndUserProps<TElement extends Element = TMicroElement, TValue = string | boolean | number | Date> extends IBE<TElement>{
     observeAttr?: boolean;
     value?: string | boolean | number | Date;
 }

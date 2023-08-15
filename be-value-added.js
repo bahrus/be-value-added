@@ -1,4 +1,6 @@
 import { BE, propInfo } from 'be-enhanced/BE.js';
+import { XE } from 'xtal-element/XE.js';
+import { register } from 'be-hive/register.js';
 export class BeValueAdded extends BE {
     #mutationObserver;
     #skipParsingAttrChange = false;
@@ -151,3 +153,22 @@ export const beValueAddedActions = {
         ifKeyIn: ['value']
     }
 };
+const tagName = 'be-value-added';
+const ifWantsToBe = 'value-added';
+const upgrade = 'time,data,link,meta';
+const xe = new XE({
+    config: {
+        tagName,
+        propDefaults: {
+            ...beValueAddedPropDefaults
+        },
+        propInfo: {
+            ...beValueAddedPropInfo
+        },
+        actions: {
+            ...beValueAddedActions
+        }
+    },
+    superclass: BeValueAdded
+});
+register(ifWantsToBe, upgrade, tagName);

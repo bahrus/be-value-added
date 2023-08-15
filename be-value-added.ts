@@ -1,10 +1,12 @@
 import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
-import {BVAAllProps, BVAActions} from './types.js';
+import {BVAAllProps, BVAActions, TMicroElement} from './types.js';
 import { IEnhancement } from 'be-enhanced/types.js';
+import { XE } from 'xtal-element/XE.js';
 import {XEArgs, PropInfoExt} from 'xtal-element/types';
-import {Action} from 'trans-render/lib/types';
+import {Action} from 'trans-render/lib/types.js';
+import { register } from 'be-hive/register.js';
 
-export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement> implements BVAActions{
+export class BeValueAdded<TElement extends Element = TMicroElement> extends BE<BVAAllProps, BVAActions, TElement> implements BVAActions{
     #mutationObserver: MutationObserver | undefined;
     #skipParsingAttrChange = false;
     #skipSettingAttr = false;
@@ -52,7 +54,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions, HTMLLinkElement | 
         }
     }
 
-    override detach(detachedElement: HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLOutputElement | HTMLTimeElement): void {
+    override detach(detachedElement: TElement): void {
         if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
     }
 
@@ -163,3 +165,25 @@ export const beValueAddedActions = {
         ifKeyIn: ['value']
     }
 } as Partial<{[key in keyof BVAActions]: Action<BVAAllProps> | keyof BVAAllProps}>;
+
+const tagName = 'be-value-added';
+const ifWantsToBe = 'value-added';
+const upgrade = 'time,data,link,meta';
+
+const xe = new XE<BVAAllProps, BVAActions>({
+    config:{
+        tagName,
+        propDefaults:{
+            ...beValueAddedPropDefaults
+        },
+        propInfo:{
+            ...beValueAddedPropInfo
+        },
+        actions:{
+            ...beValueAddedActions
+        }
+    },
+    superclass: BeValueAdded
+});
+
+register(ifWantsToBe, upgrade, tagName);
