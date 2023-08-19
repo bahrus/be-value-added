@@ -42,6 +42,14 @@ generates:
 <link itemprop=prop2 itemtype=https://schema.org/Boolean href=https://schema.org/False>
 ```
 
+Other actions:
+
+| Action     | What it does                      |
+|------------|-----------------------------------|
+| toggleTo   | toggles peer itemprop to opposite |
+| dispatch   | fires event from host             |
+
+etc (copied from xtal-element/types.d.ts)
 
 ## Running locally
 
