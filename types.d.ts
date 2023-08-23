@@ -1,11 +1,13 @@
 import { ActionOnEventConfigs } from "trans-render/froop/types";
+import {JSONValue} from 'trans-render/lib/types';
 import {IBE, Declarations} from 'be-enhanced/types';
 
-export type TMicroElement = HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement;
+//export type TMicroElement = HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement;
 
-export interface BVAEndUserProps<TElement extends Element = TMicroElement, TValue = string | boolean | number | Date> extends IBE<TElement>{
+export interface BVAEndUserProps extends IBE{
     observeAttr?: boolean;
-    value?: string | boolean | number | Date;
+    observeTextContent?: boolean;
+    value?: string | boolean | number | Date | JSONValue;
 }
 
 export interface BVAAllProps extends BVAEndUserProps{

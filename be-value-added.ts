@@ -1,5 +1,5 @@
 import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
-import {BVAAllProps, BVAActions, TMicroElement} from './types.js';
+import {BVAAllProps, BVAActions} from './types.js';
 import { IEnhancement } from 'be-enhanced/types.js';
 import { XE } from 'xtal-element/XE.js';
 import {XEArgs, PropInfoExt} from 'xtal-element/types';
@@ -13,14 +13,16 @@ function tryJSONParse(s: string){
         return undefined;
     }
 }
-export class BeValueAdded<TElement extends Element = TMicroElement> extends BE<BVAAllProps, BVAActions, TElement> implements BVAActions{
+export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActions{
     #mutationObserver: MutationObserver | undefined;
     #skipParsingAttrChange = false;
     #skipSettingAttr = false;
 
     hydrate(self: this){
         const {enhancedElement, observeAttr, value} = self;
-        if(observeAttr !== false){
+        const attr = self.attr;
+        if(attr !== 'textContent' && observeAttr){
+            
             const mutOptions: MutationObserverInit = {
                 attributeFilter: [self.attr],
                 attributes: true
@@ -33,14 +35,10 @@ export class BeValueAdded<TElement extends Element = TMicroElement> extends BE<B
                 Object.assign(self, self.parseAttr(self));
             });
             self.#mutationObserver.observe(enhancedElement, mutOptions);
+        }else if(attr === 'textContent' && this.observeTextContent){
+
         }
-        const {localName} = enhancedElement;
-        switch(localName){
-            case 'data':
-            case 'time':
-                enhancedElement.ariaLive = 'polite';
-                break;
-        }
+        enhancedElement.ariaLive = 'polite';
         return value === undefined ? self.parseAttr(self) : {resolved: true};
     
         
@@ -56,12 +54,14 @@ export class BeValueAdded<TElement extends Element = TMicroElement> extends BE<B
                 return 'value';
             case 'time':
                 return 'datetime';
+            case 'a':
+                return 'href';
             default:
-                return 'value';
+                return 'textContent';
         }
     }
 
-    override detach(detachedElement: TElement): void {
+    override detach(detachedElement: Element): void {
         if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
     }
 
@@ -161,6 +161,12 @@ export const beValueAddedPropDefaults: Partial<BVAAllProps> = {
 
 export const beValueAddedPropInfo: Partial<{[key in keyof BVAAllProps]: PropInfoExt<IEnhancement>}> = {
     ...propInfo,
+    observeAttr:{
+        type: 'Boolean'
+    },
+    observeText: {
+        
+    }
     value:{
         notify:{
             dispatch: true,

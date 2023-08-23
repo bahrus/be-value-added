@@ -23,14 +23,27 @@ Note that this does *not* add or modify the value property onto the enhanced ele
 
 1.  Be able to be passed a value
 2.  Reflect that value in some way to an attribute and/or text content of the element.
-3.  Optionally be able to observe the attribute for modifications from other sources, and sync that back up with the value.
+3.  Optionally be able to observe the attribute (or text content -- todo) for modifications from other sources, and sync that back up with the value.
 
 ## Computed itemprops [TODO]
 
 ```html
-<link itemprop=prop1  be-value-added='{
-    "negateTo": "prop2"
-}' itemtype=https://schema.org/Boolean href=https://schema.org/True>
+<link itemprop=prop1  be-value-added='
+    Negate to prop2.
+    Negate to prop2 after 40 ms.
+    Toggle to prop2.
+    Toggle to prop2 after 40 ms.
+    Echo to prop2.
+    Echo to prop2 after 40 ms.
+    Reflect to host attr.
+    Reflect to host custom state.
+    Parse to prop2 as number.
+    Parse to prop2 as date.
+    Parse to prop2 as object.
+    Dispatch.
+    Clone to prop2.
+    Increment to prop2.
+' itemtype=https://schema.org/Boolean href=https://schema.org/True>
 ```
 
 generates:
@@ -53,7 +66,7 @@ etc (copied from xtal-element/types.d.ts)
 
 ## Running locally
 
-Any web server than can serve static files will do, but...
+Any web server that can serve static files will do, but...
 
 1.  Install git.
 2.  Do a git clone or a git fork of repository https://github.com/bahrus/be-value-added
