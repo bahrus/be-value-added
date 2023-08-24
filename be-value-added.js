@@ -15,7 +15,8 @@ export class BeValueAdded extends BE {
     #skipSettingAttr = false;
     hydrate(self) {
         const { enhancedElement, observeAttr, value } = self;
-        if (observeAttr !== false) {
+        const attr = self.attr;
+        if (attr !== 'textContent' && observeAttr) {
             const mutOptions = {
                 attributeFilter: [self.attr],
                 attributes: true
@@ -29,13 +30,9 @@ export class BeValueAdded extends BE {
             });
             self.#mutationObserver.observe(enhancedElement, mutOptions);
         }
-        const { localName } = enhancedElement;
-        switch (localName) {
-            case 'data':
-            case 'time':
-                enhancedElement.ariaLive = 'polite';
-                break;
+        else if (attr === 'textContent' && this.observeTextContent) {
         }
+        enhancedElement.ariaLive = 'polite';
         return value === undefined ? self.parseAttr(self) : { resolved: true };
     }
     get attr() {
@@ -48,8 +45,10 @@ export class BeValueAdded extends BE {
                 return 'value';
             case 'time':
                 return 'datetime';
+            case 'a':
+                return 'href';
             default:
-                return 'value';
+                return 'textContent';
         }
     }
     detach(detachedElement) {
@@ -149,6 +148,10 @@ export const beValueAddedPropDefaults = {
 };
 export const beValueAddedPropInfo = {
     ...propInfo,
+    observeAttr: {
+        type: 'Boolean'
+    },
+    observeText: {},
     value: {
         notify: {
             dispatch: true,

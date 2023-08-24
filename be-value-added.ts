@@ -164,9 +164,9 @@ export const beValueAddedPropInfo: Partial<{[key in keyof BVAAllProps]: PropInfo
     observeAttr:{
         type: 'Boolean'
     },
-    observeText: {
-        
-    }
+    observeTextContent: {
+        type: 'Boolean'
+    },
     value:{
         notify:{
             dispatch: true,
