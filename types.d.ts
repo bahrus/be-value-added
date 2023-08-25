@@ -5,13 +5,14 @@ import {IBE, Declarations} from 'be-enhanced/types';
 //export type TMicroElement = HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement;
 
 export interface BVAEndUserProps extends IBE{
-    observeAttr?: boolean;
-    observeTextContent?: boolean;
+    observeStrValue?: boolean;
     value?: string | boolean | number | Date | JSONValue;
 }
 
 export interface BVAAllProps extends BVAEndUserProps{
     attached?: boolean;
+    mutOptions?: MutationObserverInit;
+    valueFromTextContent?: boolean;
 }
 
 // export interface Output{
@@ -25,4 +26,7 @@ export interface BVAActions{
     hydrate(self: this): BVAP;
     parseAttr(self: this): BVAP;
     onValChange(self: this): void;
+    obs(self: this): void;
+    obsTC(self: this): BVAP;
+    obsAttr(self: this): BVAP;
 }

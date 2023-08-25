@@ -11,29 +11,43 @@ function tryJSONParse(s) {
 }
 export class BeValueAdded extends BE {
     #mutationObserver;
-    #skipParsingAttrChange = false;
+    #skipParsingAttrOrTextContentChange = false;
     #skipSettingAttr = false;
     hydrate(self) {
-        const { enhancedElement, observeAttr, value } = self;
+        const { enhancedElement, value } = self;
         const attr = self.attr;
-        if (attr !== 'textContent' && observeAttr) {
-            const mutOptions = {
+        enhancedElement.ariaLive = 'polite';
+        return value === undefined ? self.parseAttr(self) : {
+            resolved: true,
+            valueFromTextContent: attr === 'textContent',
+        };
+    }
+    obs(self) {
+        const { enhancedElement, mutOptions } = self;
+        self.#mutationObserver = new MutationObserver(( /*mutations: MutationRecord[]*/) => {
+            console.log('in mut observer event');
+            if (self.#skipParsingAttrOrTextContentChange) {
+                self.#skipParsingAttrOrTextContentChange = false;
+                return;
+            }
+            Object.assign(self, self.parseAttr(self));
+        });
+        self.#mutationObserver.observe(enhancedElement, mutOptions);
+    }
+    obsTC(self) {
+        return {
+            mutOptions: {
+                childList: true
+            }
+        };
+    }
+    obsAttr(self) {
+        return {
+            mutOptions: {
                 attributeFilter: [self.attr],
                 attributes: true
-            };
-            self.#mutationObserver = new MutationObserver(( /*mutations: MutationRecord[]*/) => {
-                if (self.#skipParsingAttrChange) {
-                    self.#skipParsingAttrChange = false;
-                    return;
-                }
-                Object.assign(self, self.parseAttr(self));
-            });
-            self.#mutationObserver.observe(enhancedElement, mutOptions);
-        }
-        else if (attr === 'textContent' && this.observeTextContent) {
-        }
-        enhancedElement.ariaLive = 'polite';
-        return value === undefined ? self.parseAttr(self) : { resolved: true };
+            }
+        };
     }
     get attr() {
         switch (this.enhancedElement.localName) {
@@ -56,7 +70,17 @@ export class BeValueAdded extends BE {
             this.#mutationObserver.disconnect();
     }
     parseAttr(self) {
-        const { enhancedElement } = self;
+        const { enhancedElement, attr } = self;
+        const returnObj = {
+            resolved: true,
+            valueFromTextContent: attr === 'textContent'
+        };
+        if (attr === 'textContent') {
+            return {
+                value: enhancedElement.textContent,
+                ...returnObj
+            };
+        }
         self.#skipSettingAttr = true;
         if (enhancedElement instanceof HTMLMetaElement) {
             const type = enhancedElement.getAttribute('itemtype');
@@ -65,57 +89,57 @@ export class BeValueAdded extends BE {
                 case 'https://schema.org/Number':
                     return {
                         value: Number(content),
-                        resolved: true,
+                        ...returnObj
                     };
                 case 'https://schema.org/Integer':
                     return {
                         value: parseInt(content),
-                        resolved: true,
+                        ...returnObj
                     };
                 case 'https://schema.org/Float':
                     return {
                         value: parseFloat(content),
-                        resolved: true,
+                        ...returnObj
                     };
                 default:
                     return {
                         value: content,
-                        resolved: true,
+                        ...returnObj
                     };
             }
         }
         else if (enhancedElement instanceof HTMLLinkElement) {
             const split = (enhancedElement.href).split('/');
             const lastVal = split.at(-1);
-            self.#skipParsingAttrChange = true;
+            self.#skipParsingAttrOrTextContentChange = true;
             switch (lastVal) {
                 case 'True':
                     return {
                         value: true,
-                        resolved: true,
+                        ...returnObj
                     };
                 case 'False':
                     return {
                         value: false,
-                        resolved: true,
+                        ...returnObj
                     };
                 default:
                     return {
                         value: lastVal,
-                        resolved: true,
+                        ...returnObj
                     };
             }
         }
         else if (enhancedElement instanceof HTMLDataElement) {
             return {
                 value: tryJSONParse(enhancedElement.value),
-                resolved: true,
+                ...returnObj
             };
         }
         else if (enhancedElement instanceof HTMLTimeElement) {
             return {
                 value: Date.parse(enhancedElement.dateTime),
-                resolved: true,
+                ...returnObj
             };
         }
         else {
@@ -125,7 +149,7 @@ export class BeValueAdded extends BE {
         }
     }
     onValChange(self) {
-        const { value } = self;
+        const { value, valueFromTextContent } = self;
         if (value === undefined || value === null) {
             return;
         }
@@ -139,6 +163,9 @@ export class BeValueAdded extends BE {
                     value === false ? 'False' : value;
                 enhancedElement.href = 'https://schema.org/' + urlVal;
             }
+            else if (valueFromTextContent) {
+                enhancedElement.textContent = value.toString();
+            }
         }
         this.#skipSettingAttr = false;
     }
@@ -148,10 +175,6 @@ export const beValueAddedPropDefaults = {
 };
 export const beValueAddedPropInfo = {
     ...propInfo,
-    observeAttr: {
-        type: 'Boolean'
-    },
-    observeText: {},
     value: {
         notify: {
             dispatch: true,
@@ -162,7 +185,15 @@ export const beValueAddedActions = {
     hydrate: 'attached',
     onValChange: {
         ifKeyIn: ['value']
-    }
+    },
+    obsTC: {
+        ifAllOf: ['observeStrValue', 'valueFromTextContent'],
+    },
+    obsAttr: {
+        ifAllOf: ['observeStrValue'],
+        ifNoneOf: ['valueFromTextContent']
+    },
+    obs: 'mutOptions',
 };
 const tagName = 'be-value-added';
 const ifWantsToBe = 'value-added';
