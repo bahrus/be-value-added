@@ -19,7 +19,7 @@ Anyway, the model / precedent that the output element provides seems quite usefu
 <link id=link  be-value-added>
 ```
 
-This package contains a base class that helps implement such features in userland using custom [enhancements](https://github.com/bahrus).  This package  also provides end-user capabilities in its own right.
+This package contains a base class that helps implement such features in userland using custom [enhancements](https://github.com/bahrus/be-enhanced).  This package  also provide end-user capabilities in its own right.
 
 Note that this does *not* add or modify the value property onto the enhanced element (top level).  It just provides a uniform interface for multiple enhancements, all of which need to:
 
