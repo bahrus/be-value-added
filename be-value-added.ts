@@ -14,7 +14,7 @@ import { register } from 'be-hive/register.js';
 //     }
 // }
 
-function parseVal(str: string, type: string | null){
+function parseVal(str: string, type: string | null, tryJSON = false){
     if(type === null) return str;
     switch(type){
         case 'https://schema.org/Number':
@@ -27,7 +27,16 @@ function parseVal(str: string, type: string | null){
             return new Date(str);
 
     }
-    return str;
+    if(tryJSON){
+        try{
+            return JSON.parse(str);
+        }catch(e){
+            return str;
+        }
+    }else{
+        return str;
+    }
+    
 }
 
 const propTests: Array<PropTypes> = ['href', 'content', 'value', 'dateTime', 'textContent'];
@@ -52,7 +61,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
     obs(self: this){
         const {enhancedElement, mutOptions} = self;
         self.#mutationObserver = new MutationObserver((/*mutations: MutationRecord[]*/) => {
-            console.log('in mut observer event');
+            //console.log('in mut observer event');
             if(self.#skipParsingAttrOrTextContentChange){
                 self.#skipParsingAttrOrTextContentChange = false;
                 return;
@@ -112,7 +121,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
                 const type = enhancedElement.getAttribute('itemtype');
                 const content = (<any>enhancedElement).content;
                 return {
-                    value: parseVal(content, type),
+                    value: parseVal(content, type, true),
                     ...returnObj
                 }
             }
@@ -155,7 +164,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
                 const type = enhancedElement.getAttribute('itemtype');
                 const content = (<any>enhancedElement).content;
                 return {
-                    value: parseVal(content, type),
+                    value: parseVal(content, type, true),
                     ...returnObj
                 }
             }

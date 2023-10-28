@@ -8,7 +8,7 @@ import { register } from 'be-hive/register.js';
 //         return undefined;
 //     }
 // }
-function parseVal(str, type) {
+function parseVal(str, type, tryJSON = false) {
     if (type === null)
         return str;
     switch (type) {
@@ -21,7 +21,17 @@ function parseVal(str, type) {
         case 'https://schema.org/DateTime':
             return new Date(str);
     }
-    return str;
+    if (tryJSON) {
+        try {
+            return JSON.parse(str);
+        }
+        catch (e) {
+            return str;
+        }
+    }
+    else {
+        return str;
+    }
 }
 const propTests = ['href', 'content', 'value', 'dateTime', 'textContent'];
 export class BeValueAdded extends BE {
@@ -40,7 +50,7 @@ export class BeValueAdded extends BE {
     obs(self) {
         const { enhancedElement, mutOptions } = self;
         self.#mutationObserver = new MutationObserver(( /*mutations: MutationRecord[]*/) => {
-            console.log('in mut observer event');
+            //console.log('in mut observer event');
             if (self.#skipParsingAttrOrTextContentChange) {
                 self.#skipParsingAttrOrTextContentChange = false;
                 return;
@@ -94,7 +104,7 @@ export class BeValueAdded extends BE {
                 const type = enhancedElement.getAttribute('itemtype');
                 const content = enhancedElement.content;
                 return {
-                    value: parseVal(content, type),
+                    value: parseVal(content, type, true),
                     ...returnObj
                 };
             }
@@ -138,7 +148,7 @@ export class BeValueAdded extends BE {
                 const type = enhancedElement.getAttribute('itemtype');
                 const content = enhancedElement.content;
                 return {
-                    value: parseVal(content, type),
+                    value: parseVal(content, type, true),
                     ...returnObj
                 };
             }
