@@ -5,7 +5,7 @@ import {IBE, Declarations} from 'be-enhanced/types';
 //export type TMicroElement = HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement;
 
 export interface BVAEndUserProps extends IBE{
-    observeStrValue?: boolean;
+    beVigilant?: boolean;
     value?: string | boolean | number | Date | JSONValue;
 }
 
@@ -30,3 +30,5 @@ export interface BVAActions{
     obsTC(self: this): BVAP;
     obsAttr(self: this): BVAP;
 }
+
+export type PropTypes = 'href' | 'content' | 'value' | 'dateTime' | 'textContent'

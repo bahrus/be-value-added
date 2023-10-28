@@ -1,33 +1,37 @@
 import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
-import {BVAAllProps, BVAActions, BVAP} from './types.js';
+import {BVAAllProps, BVAActions, BVAP, PropTypes} from './types.js';
 import { IEnhancement } from 'be-enhanced/types.js';
 import { XE } from 'xtal-element/XE.js';
 import {XEArgs, PropInfoExt} from 'xtal-element/types';
 import {Action} from 'trans-render/lib/types.js';
 import { register } from 'be-hive/register.js';
 
-function tryJSONParse(s: string){
-    try{
-        return JSON.parse(s);
-    }catch(e){
-        return undefined;
+// function tryJSONParse(s: string){
+//     try{
+//         return JSON.parse(s);
+//     }catch(e){
+//         return undefined;
+//     }
+// }
+
+function parseVal(str: string, type: string | null){
+    if(type === null) return str;
+    switch(type){
+        case 'https://schema.org/Number':
+            return Number(str);
+        case 'https://schema.org/Integer':
+            return parseInt(str);
+        case 'https://schema.org/Float':
+            return parseFloat(str);
+        case 'https://schema.org/DateTime':
+            return new Date(str);
+
     }
+    return str;
 }
 
-const propTests = [
-    {
-        prop: 'href',
-        attr: 'href'
-    }, {
-        prop: 'content',
-        attr: 'content'
-    }, {
-        prop: 'value',
-        attr: 'value'
-     }, {
-        prop: 'dateTime',
-        attr: 'datetime'
-    }];
+const propTests: Array<PropTypes> = ['href', 'content', 'value', 'dateTime', 'textContent'];
+
 export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActions{
     #mutationObserver: MutationObserver | undefined;
     #skipParsingAttrOrTextContentChange = false;
@@ -75,11 +79,10 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
         } as BVAP;
     }
 
-    get attr(){
+    get attr(): PropTypes {
         const {enhancedElement} = this;
-        for(const test of propTests){
-            const {prop, attr} = test;
-            if(prop in enhancedElement) return attr;
+        for(const prop of propTests){
+            if(prop in enhancedElement) return prop;
         }
         return 'textContent';
     }
@@ -87,6 +90,8 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
     override detach(detachedElement: Element): void {
         if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
     }
+
+
 
     parseAttr(self: this): Partial<BVAAllProps> {
         const {enhancedElement, attr} = self;
@@ -102,67 +107,61 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
             }
         }
         self.#skipSettingAttr = true;
-        if(enhancedElement instanceof HTMLMetaElement){
-            const type = enhancedElement.getAttribute('itemtype');
-            const content = enhancedElement.content;
-            switch(type){
-                case 'https://schema.org/Number':
-                    return {
-                        value: Number(content),
-                        ...returnObj
-                    };
-                case 'https://schema.org/Integer':
-                    return {
-                        value: parseInt(content),
-                        ...returnObj
-                    };
-                case 'https://schema.org/Float':
-                    return {
-                        value: parseFloat(content),
-                        ...returnObj
-                    }
-                default:
-                    return {
-                        value: content,
-                        ...returnObj
-                    }
+        switch(attr){
+            case 'content':{
+                const type = enhancedElement.getAttribute('itemtype');
+                const content = (<any>enhancedElement).content;
+                return {
+                    value: parseVal(content, type),
+                    ...returnObj
+                }
             }
-        }else if (enhancedElement instanceof HTMLLinkElement){
-            const split = (enhancedElement.href).split('/');
-            const lastVal = split.at(-1);
-            self.#skipParsingAttrOrTextContentChange = true;
-            switch(lastVal){
-                case 'True':
-                    return {
-                        value: true,
-                        ...returnObj
+            case 'href': {
+                const {href}: {href: string} = (<any>enhancedElement);
+                if (enhancedElement instanceof HTMLLinkElement){
+                    const split = (enhancedElement.href).split('/');
+                    const lastVal = split.at(-1);
+                    switch(lastVal){
+                        case 'True':
+                            return {
+                                value: true,
+                                ...returnObj
+                            }
+                        case 'False':
+                            return {
+                                value: false,
+                                ...returnObj
+                            }
+                        default:
+                            return {
+                                value: lastVal,
+                                ...returnObj
+                            }
                     }
-                case 'False':
+                }else{
                     return {
-                        value: false,
-                        ...returnObj
+                        value: href,
+                        ...returnObj,
                     }
-                default:
-                    return {
-                        value: lastVal,
-                        ...returnObj
-                    }
+                }
             }
-        }else if(enhancedElement instanceof HTMLDataElement){
-            return {
-                value: tryJSONParse(enhancedElement.value),
-                ...returnObj
+            case 'dateTime': {
+                return {
+                    value: new Date((<any>enhancedElement).dateTime),
+                    ...returnObj
+                }
             }
-        
-        }else if(enhancedElement instanceof HTMLTimeElement){
-            return {
-                value: Date.parse(enhancedElement.dateTime),
-                ...returnObj
+            case 'value':{
+                const type = enhancedElement.getAttribute('itemtype');
+                const content = (<any>enhancedElement).content;
+                return {
+                    value: parseVal(content, type),
+                    ...returnObj
+                }
             }
-        }else{
-            return {
-                resolved: false,
-            }
+        }
+        return {
+            resolved: false,
         }
     }
 
@@ -204,20 +203,20 @@ export const beValueAddedPropInfo: Partial<{[key in keyof BVAAllProps]: PropInfo
     }
 };
 
-export const beValueAddedActions = {
+export const beValueAddedActions: Partial<{[key in keyof BVAActions]: Action<BVAAllProps> | keyof BVAAllProps}> = {
     hydrate: 'attached',
     onValChange:{
         ifKeyIn: ['value']
     },
     obsTC: {
-        ifAllOf: ['observeStrValue', 'valueFromTextContent'],
+        ifAllOf: ['beVigilant', 'valueFromTextContent'],
     },
     obsAttr:{
-        ifAllOf: ['observeStrValue'],
+        ifAllOf: ['beVigilant'],
         ifNoneOf: ['valueFromTextContent']
     },
     obs: 'mutOptions',
-} as Partial<{[key in keyof BVAActions]: Action<BVAAllProps> | keyof BVAAllProps}>;
+};
 
 const tagName = 'be-value-added';
 const ifWantsToBe = 'value-added';

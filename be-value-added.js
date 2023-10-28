@@ -1,29 +1,29 @@
 import { BE, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
-function tryJSONParse(s) {
-    try {
-        return JSON.parse(s);
+// function tryJSONParse(s: string){
+//     try{
+//         return JSON.parse(s);
+//     }catch(e){
+//         return undefined;
+//     }
+// }
+function parseVal(str, type) {
+    if (type === null)
+        return str;
+    switch (type) {
+        case 'https://schema.org/Number':
+            return Number(str);
+        case 'https://schema.org/Integer':
+            return parseInt(str);
+        case 'https://schema.org/Float':
+            return parseFloat(str);
+        case 'https://schema.org/DateTime':
+            return new Date(str);
     }
-    catch (e) {
-        return undefined;
-    }
+    return str;
 }
-const propTests = [
-    {
-        prop: 'href',
-        attr: 'href'
-    }, {
-        prop: 'content',
-        attr: 'content'
-    }, {
-        prop: 'value',
-        attr: 'value'
-    }, {
-        prop: 'dateTime',
-        attr: 'datetime'
-    }
-];
+const propTests = ['href', 'content', 'value', 'dateTime', 'textContent'];
 export class BeValueAdded extends BE {
     #mutationObserver;
     #skipParsingAttrOrTextContentChange = false;
@@ -66,10 +66,9 @@ export class BeValueAdded extends BE {
     }
     get attr() {
         const { enhancedElement } = this;
-        for (const test of propTests) {
-            const { prop, attr } = test;
+        for (const prop of propTests) {
             if (prop in enhancedElement)
-                return attr;
+                return prop;
         }
         return 'textContent';
     }
@@ -90,71 +89,63 @@ export class BeValueAdded extends BE {
             };
         }
         self.#skipSettingAttr = true;
-        if (enhancedElement instanceof HTMLMetaElement) {
-            const type = enhancedElement.getAttribute('itemtype');
-            const content = enhancedElement.content;
-            switch (type) {
-                case 'https://schema.org/Number':
+        switch (attr) {
+            case 'content': {
+                const type = enhancedElement.getAttribute('itemtype');
+                const content = enhancedElement.content;
+                return {
+                    value: parseVal(content, type),
+                    ...returnObj
+                };
+            }
+            case 'href': {
+                const { href } = enhancedElement;
+                if (enhancedElement instanceof HTMLLinkElement) {
+                    const split = (enhancedElement.href).split('/');
+                    const lastVal = split.at(-1);
+                    switch (lastVal) {
+                        case 'True':
+                            return {
+                                value: true,
+                                ...returnObj
+                            };
+                        case 'False':
+                            return {
+                                value: false,
+                                ...returnObj
+                            };
+                        default:
+                            return {
+                                value: lastVal,
+                                ...returnObj
+                            };
+                    }
+                }
+                else {
                     return {
-                        value: Number(content),
-                        ...returnObj
+                        value: href,
+                        ...returnObj,
                     };
-                case 'https://schema.org/Integer':
-                    return {
-                        value: parseInt(content),
-                        ...returnObj
-                    };
-                case 'https://schema.org/Float':
-                    return {
-                        value: parseFloat(content),
-                        ...returnObj
-                    };
-                default:
-                    return {
-                        value: content,
-                        ...returnObj
-                    };
+                }
+            }
+            case 'dateTime': {
+                return {
+                    value: new Date(enhancedElement.dateTime),
+                    ...returnObj
+                };
+            }
+            case 'value': {
+                const type = enhancedElement.getAttribute('itemtype');
+                const content = enhancedElement.content;
+                return {
+                    value: parseVal(content, type),
+                    ...returnObj
+                };
             }
         }
-        else if (enhancedElement instanceof HTMLLinkElement) {
-            const split = (enhancedElement.href).split('/');
-            const lastVal = split.at(-1);
-            self.#skipParsingAttrOrTextContentChange = true;
-            switch (lastVal) {
-                case 'True':
-                    return {
-                        value: true,
-                        ...returnObj
-                    };
-                case 'False':
-                    return {
-                        value: false,
-                        ...returnObj
-                    };
-                default:
-                    return {
-                        value: lastVal,
-                        ...returnObj
-                    };
-            }
-        }
-        else if (enhancedElement instanceof HTMLDataElement) {
-            return {
-                value: tryJSONParse(enhancedElement.value),
-                ...returnObj
-            };
-        }
-        else if (enhancedElement instanceof HTMLTimeElement) {
-            return {
-                value: Date.parse(enhancedElement.dateTime),
-                ...returnObj
-            };
-        }
-        else {
-            return {
-                resolved: false,
-            };
-        }
+        return {
+            resolved: false,
+        };
     }
     onValChange(self) {
         const { value, valueFromTextContent } = self;
@@ -195,10 +186,10 @@ export const beValueAddedActions = {
         ifKeyIn: ['value']
     },
     obsTC: {
-        ifAllOf: ['observeStrValue', 'valueFromTextContent'],
+        ifAllOf: ['beVigilant', 'valueFromTextContent'],
     },
     obsAttr: {
-        ifAllOf: ['observeStrValue'],
+        ifAllOf: ['beVigilant'],
         ifNoneOf: ['valueFromTextContent']
     },
     obs: 'mutOptions',
