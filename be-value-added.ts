@@ -13,6 +13,21 @@ function tryJSONParse(s: string){
         return undefined;
     }
 }
+
+const propTests = [
+    {
+        prop: 'href',
+        attr: 'href'
+    }, {
+        prop: 'content',
+        attr: 'content'
+    }, {
+        prop: 'value',
+        attr: 'value'
+     }, {
+        prop: 'dateTime',
+        attr: 'datetime'
+    }];
 export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActions{
     #mutationObserver: MutationObserver | undefined;
     #skipParsingAttrOrTextContentChange = false;
@@ -61,20 +76,12 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
     }
 
     get attr(){
-        switch(this.enhancedElement.localName){
-            case 'link':
-                return 'href';
-            case 'meta':
-                return 'content';
-            case 'data':
-                return 'value';
-            case 'time':
-                return 'datetime';
-            case 'a':
-                return 'href';
-            default:
-                return 'textContent';
+        const {enhancedElement} = this;
+        for(const test of propTests){
+            const {prop, attr} = test;
+            if(prop in enhancedElement) return attr;
         }
+        return 'textContent';
     }
 
     override detach(detachedElement: Element): void {

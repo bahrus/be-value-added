@@ -9,6 +9,21 @@ function tryJSONParse(s) {
         return undefined;
     }
 }
+const propTests = [
+    {
+        prop: 'href',
+        attr: 'href'
+    }, {
+        prop: 'content',
+        attr: 'content'
+    }, {
+        prop: 'value',
+        attr: 'value'
+    }, {
+        prop: 'dateTime',
+        attr: 'datetime'
+    }
+];
 export class BeValueAdded extends BE {
     #mutationObserver;
     #skipParsingAttrOrTextContentChange = false;
@@ -50,20 +65,13 @@ export class BeValueAdded extends BE {
         };
     }
     get attr() {
-        switch (this.enhancedElement.localName) {
-            case 'link':
-                return 'href';
-            case 'meta':
-                return 'content';
-            case 'data':
-                return 'value';
-            case 'time':
-                return 'datetime';
-            case 'a':
-                return 'href';
-            default:
-                return 'textContent';
+        const { enhancedElement } = this;
+        for (const test of propTests) {
+            const { prop, attr } = test;
+            if (prop in enhancedElement)
+                return attr;
         }
+        return 'textContent';
     }
     detach(detachedElement) {
         if (this.#mutationObserver !== undefined)

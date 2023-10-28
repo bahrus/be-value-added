@@ -4,9 +4,24 @@
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-value-added?compression=gzip">
 [![NPM version](https://badge.fury.io/js/be-value-added.png)](http://badge.fury.io/js/be-value-added)
 
-Enhances some built-in elements with a "value" property, which other enhancements use to provide formatting and binding support.
+Enhances most built-in elements with a "value" property, which other enhancements use to provide formatting.  Adds two-way binding support between this "value" property and a key property, in some cases.
 
 The [output element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) provides an example of a built-in element that "outputs" its value.  It's a bit of a strange creature, given that it displays the exact value passed in, but the "value-add" proposition the output element provides may be a bit esoteric (a11y related).
+
+The "value" property this enhancement adds is accessible via oElement.beEnhanced.beValueAdded.value.
+
+The elements be-value-added supports are many of the special elements used by microdata:
+
+| Element        | Binding property/attribute         
+|----------------|------------------------------------|
+| a              | href/href                          |
+| time           | datetime/dateTime                  |
+| meta           | content/content                    |
+| data           | value/value                        |
+
+
+
+
 
 ## HTML signals
 
