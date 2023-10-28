@@ -200,6 +200,7 @@ const upgrade = 'time,data,link,meta';
 const xe = new XE({
     config: {
         tagName,
+        isEnh: true,
         propDefaults: {
             ...beValueAddedPropDefaults
         },

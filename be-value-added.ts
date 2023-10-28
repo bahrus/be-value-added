@@ -225,6 +225,7 @@ const upgrade = 'time,data,link,meta';
 const xe = new XE<BVAAllProps, BVAActions>({
     config:{
         tagName,
+        isEnh: true,
         propDefaults:{
             ...beValueAddedPropDefaults
         },
