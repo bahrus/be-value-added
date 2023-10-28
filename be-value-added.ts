@@ -15,7 +15,6 @@ import { register } from 'be-hive/register.js';
 // }
 
 function parseVal(str: string, type: string | null, tryJSON = false){
-    if(type === null) return str;
     switch(type){
         case 'https://schema.org/Number':
             return Number(str);

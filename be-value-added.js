@@ -9,8 +9,6 @@ import { register } from 'be-hive/register.js';
 //     }
 // }
 function parseVal(str, type, tryJSON = false) {
-    if (type === null)
-        return str;
     switch (type) {
         case 'https://schema.org/Number':
             return Number(str);
