@@ -178,7 +178,6 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
         if(value === undefined || value === null){
             return;
         }
-        debugger;
         const {enhancedElement} = self;
         if(!this.#skipSettingAttr){
             this.#skipParsingAttrOrTextContentChange = true;
