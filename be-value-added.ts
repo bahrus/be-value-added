@@ -181,7 +181,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
         const {enhancedElement} = self;
         if(!this.#skipSettingAttr){
             if(enhancedElement instanceof HTMLMetaElement){
-                enhancedElement.content = value.toString();
+                enhancedElement.content = JSON.stringify(value);
             }else if(enhancedElement instanceof HTMLLinkElement){
                 const urlVal = value === true ? 'True' :
                 value === false ? 'False' : value;

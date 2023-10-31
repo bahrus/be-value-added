@@ -163,7 +163,7 @@ export class BeValueAdded extends BE {
         const { enhancedElement } = self;
         if (!this.#skipSettingAttr) {
             if (enhancedElement instanceof HTMLMetaElement) {
-                enhancedElement.content = value.toString();
+                enhancedElement.content = JSON.stringify(value);
             }
             else if (enhancedElement instanceof HTMLLinkElement) {
                 const urlVal = value === true ? 'True' :
