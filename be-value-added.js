@@ -160,8 +160,10 @@ export class BeValueAdded extends BE {
         if (value === undefined || value === null) {
             return;
         }
+        debugger;
         const { enhancedElement } = self;
         if (!this.#skipSettingAttr) {
+            this.#skipParsingAttrOrTextContentChange = true;
             if (enhancedElement instanceof HTMLMetaElement) {
                 enhancedElement.content = JSON.stringify(value);
             }
