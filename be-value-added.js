@@ -20,6 +20,8 @@ function parseVal(str, type, tryJSON = false) {
             return new Date(str);
     }
     if (tryJSON) {
+        if (str === jsonArrAttr || str === jsonObjAttr)
+            return str;
         try {
             return JSON.parse(str);
         }
@@ -32,6 +34,8 @@ function parseVal(str, type, tryJSON = false) {
     }
 }
 const propTests = ['href', 'content', 'value', 'dateTime', 'textContent'];
+const jsonObjAttr = '{...}';
+const jsonArrAttr = '[...]';
 export class BeValueAdded extends BE {
     #mutationObserver;
     #skipParsingAttrOrTextContentChange = false;
@@ -164,7 +168,7 @@ export class BeValueAdded extends BE {
         if (!this.#skipSettingAttr) {
             this.#skipParsingAttrOrTextContentChange = true;
             if (enhancedElement instanceof HTMLMetaElement) {
-                enhancedElement.content = JSON.stringify(value);
+                enhancedElement.content = Array.isArray(value) ? jsonArrAttr : jsonObjAttr;
             }
             else if (enhancedElement instanceof HTMLLinkElement) {
                 const urlVal = value === true ? 'True' :

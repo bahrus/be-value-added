@@ -27,6 +27,7 @@ function parseVal(str: string, type: string | null, tryJSON = false){
 
     }
     if(tryJSON){
+        if(str === jsonArrAttr || str === jsonObjAttr) return str;
         try{
             return JSON.parse(str);
         }catch(e){
@@ -39,6 +40,9 @@ function parseVal(str: string, type: string | null, tryJSON = false){
 }
 
 const propTests: Array<PropTypes> = ['href', 'content', 'value', 'dateTime', 'textContent'];
+
+const jsonObjAttr = '{...}';
+const jsonArrAttr = '[...]';
 
 export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActions{
     #mutationObserver: MutationObserver | undefined;
@@ -182,7 +186,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
         if(!this.#skipSettingAttr){
             this.#skipParsingAttrOrTextContentChange = true;
             if(enhancedElement instanceof HTMLMetaElement){
-                enhancedElement.content = JSON.stringify(value);
+                enhancedElement.content = Array.isArray(value) ? jsonArrAttr : jsonObjAttr; 
             }else if(enhancedElement instanceof HTMLLinkElement){
                 const urlVal = value === true ? 'True' :
                 value === false ? 'False' : value;
