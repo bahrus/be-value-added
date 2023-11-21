@@ -165,7 +165,7 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
             }
             case 'value':{
                 const type = enhancedElement.getAttribute('itemtype');
-                const content = (<any>enhancedElement).content;
+                const content = (<any>enhancedElement).value;
                 return {
                     value: parseVal(content, type, true),
                     ...returnObj

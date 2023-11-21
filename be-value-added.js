@@ -148,7 +148,7 @@ export class BeValueAdded extends BE {
             }
             case 'value': {
                 const type = enhancedElement.getAttribute('itemtype');
-                const content = enhancedElement.content;
+                const content = enhancedElement.value;
                 return {
                     value: parseVal(content, type, true),
                     ...returnObj
