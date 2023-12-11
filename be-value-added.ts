@@ -191,6 +191,8 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
                 const urlVal = value === true ? 'True' :
                 value === false ? 'False' : value;
                 enhancedElement.href = 'https://schema.org/' + urlVal;
+            }else if(enhancedElement instanceof HTMLDataElement){
+                enhancedElement.textContent = value.toLocaleString ? value.toLocaleString() : value.toString();
             }else if(valueFromTextContent){
                 enhancedElement.textContent = value.toString();
             }
