@@ -140,8 +140,12 @@ export class BeValueAdded extends BE {
                 }
             }
             case 'dateTime': {
+                const currVal = enhancedElement.dateTime;
+                if (!currVal) {
+                    this.#skipSettingAttr = false;
+                }
                 return {
-                    value: new Date(enhancedElement.dateTime),
+                    value: new Date(currVal),
                     ...returnObj
                 };
             }
@@ -176,6 +180,9 @@ export class BeValueAdded extends BE {
             }
             else if (enhancedElement instanceof HTMLDataElement) {
                 enhancedElement.textContent = value.toLocaleString ? value.toLocaleString() : value.toString();
+            }
+            else if (enhancedElement instanceof HTMLTimeElement) {
+                enhancedElement.textContent = value.toLocaleDateString ? value.toLocaleDateString() : value.toString();
             }
             else if (valueFromTextContent) {
                 enhancedElement.textContent = value.toString();

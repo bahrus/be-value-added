@@ -157,8 +157,12 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
                 }
             }
             case 'dateTime': {
+                const currVal = (enhancedElement as HTMLTimeElement).dateTime;
+                if(!currVal){
+                    this.#skipSettingAttr = false;
+                }
                 return {
-                    value: new Date((<any>enhancedElement).dateTime),
+                    value: new Date(currVal),
                     ...returnObj
                 }
             }
@@ -192,6 +196,8 @@ export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActi
                 enhancedElement.href = 'https://schema.org/' + urlVal;
             }else if(enhancedElement instanceof HTMLDataElement){
                 enhancedElement.textContent = value.toLocaleString ? value.toLocaleString() : value.toString();
+            }else if(enhancedElement instanceof HTMLTimeElement){
+                enhancedElement.textContent = (value as Date).toLocaleDateString ? (value as Date).toLocaleDateString() : value.toString();
             }else if(valueFromTextContent){
                 enhancedElement.textContent = value.toString();
             }
