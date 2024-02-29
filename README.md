@@ -21,9 +21,6 @@ The elements be-value-added supports are many of the special elements used by mi
 | data           | value/value                        |
 
 
-
-
-
 ## HTML signals
 
 Anyway, the model / precedent that the output element provides seems quite useful, when applied to elements that may do a bit more than simply display the value.  In particular, elements that format the value, based on Intl.* settings, or elements that reflect values to metadata attributes (meta, link tags).
@@ -33,7 +30,21 @@ Anyway, the model / precedent that the output element provides seems quite usefu
 <data id=data  be-value-added></data>
 <meta id=meta  be-value-added>
 <link id=link  be-value-added>
+...
+<script type=module>
+    import 'be-enhanced/beEnhanced.js';
+    import '../be-value-added.js';
+</script>
+<script type=module>
+    await customElements.whenDefined('be-enhanced');
+    time.beEnhanced.by.beValueAdded.value = new Date();
+    data.beEnhanced.by.beValueAdded.value = 13456789;
+    meta.beEnhanced.by.beValueAdded.value = 'hello';
+    link.beEnhanced.by.beValueAdded.value = true;
+</script>
 ```
+
+This will display the date and number in locale string format, and the meta and link tags in a microdata compatible way.
 
 This package contains a base class that helps implement such features in userland using custom [enhancements](https://github.com/bahrus/be-enhanced).  This package  also provide end-user capabilities in its own right.
 
