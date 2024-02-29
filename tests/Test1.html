@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Test 1</title>
 </head>
 <body>
     <time id=time></time>
@@ -27,9 +27,7 @@
         import '../behivior.js'
     </script>
     <script type=module>
-        console.log('iah1');
         await customElements.whenDefined('be-enhanced');
-        console.log('iah2');
         time.beEnhanced.by.beValueAdded.value = new Date();
         // data.beEnhanced.by.beValueAdded.value = 13456789;
         // meta.beEnhanced.by.beValueAdded.value = 'hello';
