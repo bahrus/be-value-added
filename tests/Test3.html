@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test 1</title>
+    <title>Test 2</title>
 </head>
 <body>
-    <time id=time></time>
+    <meta id=meta>
     <div id=target></div>
 
     <script type=importmap>
@@ -23,16 +23,17 @@
     </script>
     <script type=module>
         import 'be-enhanced/beEnhanced.js';
-        import '../be-value-added.js'
+        import '../be-value-added.js';
     </script>
     <script type=module>
         function validate(){
-            if(time.textContent = (new Date()).toLocaleDateString()){
+            const num = 13456789;
+            if(meta.content === 'hello'){
                 target.setAttribute('mark', 'good');
             }
         }
         await customElements.whenDefined('be-enhanced');
-        time.beEnhanced.by.beValueAdded.value = new Date();
+        meta.beEnhanced.by.beValueAdded.value = 'hello';
         setTimeout(() => {
             validate();
         }, 500);
