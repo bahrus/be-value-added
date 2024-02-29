@@ -56,8 +56,16 @@ Any web server that can serve static files will do, but...
 
 ## Using from ESM Module:
 
+For just the enhancement without attribute support:
+
 ```JavaScript
 import 'be-value-added/be-value-added.js';
+```
+
+For attribute/behivior support as well:
+
+```JavaScript
+import 'be-value-added/behivior.js';
 ```
 
 ## Using from CDN:
