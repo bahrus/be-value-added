@@ -7,9 +7,9 @@
 </head>
 <body>
     <time id=time></time>
-    <data id=data></data>
+    <!-- <data id=data></data>
     <meta id=meta>
-    <link id=link>
+    <link id=link> -->
 
     <script type=importmap>
         {
@@ -29,9 +29,9 @@
     <script type=module>
         await customElements.whenDefined('be-enhanced');
         time.beEnhanced.by.beValueAdded.value = new Date();
-        data.beEnhanced.by.beValueAdded.value = 13456789;
-        meta.beEnhanced.by.beValueAdded.value = 'hello';
-        link.beEnhanced.by.beValueAdded.value = true;
+        // data.beEnhanced.by.beValueAdded.value = 13456789;
+        // meta.beEnhanced.by.beValueAdded.value = 'hello';
+        // link.beEnhanced.by.beValueAdded.value = true;
     </script>
 </body>
 </html>
