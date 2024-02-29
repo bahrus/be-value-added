@@ -4,7 +4,6 @@ import { IEnhancement } from 'be-enhanced/types.js';
 import { XE } from 'xtal-element/XE.js';
 import {XEArgs, PropInfoExt} from 'xtal-element/types';
 import {Action} from 'trans-render/lib/types.js';
-import { register } from 'be-hive/register.js';
 
 // function tryJSONParse(s: string){
 //     try{
@@ -233,9 +232,8 @@ export const beValueAddedActions: Partial<{[key in keyof BVAActions]: Action<BVA
     obs: 'mutOptions',
 };
 
-const tagName = 'be-value-added';
-const ifWantsToBe = 'value-added';
-const upgrade = 'time,data,link,meta';
+export const tagName = 'be-value-added';
+
 
 const xe = new XE<BVAAllProps, BVAActions>({
     config:{
@@ -253,5 +251,3 @@ const xe = new XE<BVAAllProps, BVAActions>({
     },
     superclass: BeValueAdded
 });
-
-register(ifWantsToBe, upgrade, tagName);

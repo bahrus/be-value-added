@@ -1,6 +1,5 @@
 import { BE, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
-import { register } from 'be-hive/register.js';
 // function tryJSONParse(s: string){
 //     try{
 //         return JSON.parse(s);
@@ -210,9 +209,7 @@ export const beValueAddedActions = {
     },
     obs: 'mutOptions',
 };
-const tagName = 'be-value-added';
-const ifWantsToBe = 'value-added';
-const upgrade = 'time,data,link,meta';
+export const tagName = 'be-value-added';
 const xe = new XE({
     config: {
         tagName,
@@ -229,4 +226,3 @@ const xe = new XE({
     },
     superclass: BeValueAdded
 });
-register(ifWantsToBe, upgrade, tagName);

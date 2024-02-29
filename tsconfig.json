@@ -9,7 +9,7 @@
 		"strict": true,
 	},
 	"files":[
-		"be-value-added.ts"
+		"behivior.ts"
 	],
 	"exclude":[
 		"node_modules"
