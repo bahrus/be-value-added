@@ -3,6 +3,7 @@
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-value-added?style=for-the-badge)](https://bundlephobia.com/result?p=be-value-added)
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-value-added?compression=gzip">
 [![NPM version](https://badge.fury.io/js/be-value-added.png)](http://badge.fury.io/js/be-value-added)
+[![Playwright Tests](https://github.com/bahrus/be-value-added/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-value-added/actions/workflows/CI.yml)
 
 Enhances most built-in elements with a "value" property, which other enhancements use to provide formatting.  Adds two-way binding support between this "value" property and a key property, in some cases.
 
