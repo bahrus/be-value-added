@@ -1,6 +1,6 @@
 {
   "name": "be-value-added",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "The output element provides an example of a built-in element that \"outputs\" its value.  It's a bit of a strange feature, given that it displays the exact value passed in, but the \"value-add\" proposition the output element provides may be bit esoteric (a11y related).",
   "main": "be-value-added.js",
   "module": "be-value-added.js",
