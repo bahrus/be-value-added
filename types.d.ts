@@ -1,10 +1,10 @@
 import { ActionOnEventConfigs } from "trans-render/froop/types";
 import {JSONValue} from 'trans-render/lib/types';
-import {IBE, Declarations} from 'be-enhanced/types';
+import {IEnhancement, BEAllProps} from 'trans-render/be/types';
 
 //export type TMicroElement = HTMLLinkElement | HTMLMetaElement | HTMLDataElement | HTMLTimeElement;
 
-export interface BVAEndUserProps extends IBE{
+export interface BVAEndUserProps extends IEnhancement{
     beVigilant?: boolean;
     value?: string | boolean | number | Date | JSONValue;
 }

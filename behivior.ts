@@ -1,8 +1,3 @@
-import {register} from 'be-hive/register.js';
-import {tagName} from './be-value-added.js';
-import './be-value-added.js';
-
-const ifWantsToBe = 'value-added';
-const upgrade = 'time,data,link,meta';
-
-register(ifWantsToBe, upgrade, tagName);
+import {BeValueAdded} from './be-value-added.js';
+import {def} from 'trans-render/lib/def.js';
+import {BeHive} from 'be-hive/be-hive.js';

@@ -1,38 +1,49 @@
-import {config as beCnfg} from 'be-enhanced/config.js';
-import {BE, BEConfig} from 'be-enhanced/BE.js';
-import {BVAActions, BVAAllProps, BVAP, PropTypes, } from './types';
-import { Positractions, PropInfo } from 'trans-render/froop/types';
-import {IEnhancement,  BEAllProps} from 'trans-render/be/types';
+import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
+import {BVAAllProps, BVAActions, BVAP, PropTypes} from '../types.js';
+import { IEnhancement } from 'be-enhanced/types.js';
+import { XE } from 'xtal-element/XE.js';
+import {XEArgs, PropInfoExt} from 'xtal-element/types';
+import {Action} from 'trans-render/lib/types.js';
 
-export class BeValueAdded extends BE<Element> implements BVAActions{
-    static override config: BEConfig<BVAP & BEAllProps, BVAActions & IEnhancement, any> = {
-        propInfo: {
-            attached: {
-                def: true,
-                ro: true,
-            }
-        },
-        actions: {
-            hydrate: {
-                ifAllOf: ['attached'],
-            },
-            onValChange:{
-                ifKeyIn: ['value']
-            },
-            obsTC: {
-                ifAllOf: ['beVigilant', 'valueFromTextContent'],
-            },
-            obsAttr:{
-                ifAllOf: ['beVigilant'],
-                ifNoneOf: ['valueFromTextContent']
-            },
-            obs:{
-                ifAllOf: ['mutOptions']
-            },
+// function tryJSONParse(s: string){
+//     try{
+//         return JSON.parse(s);
+//     }catch(e){
+//         return undefined;
+//     }
+// }
+
+function parseVal(str: string, type: string | null, tryJSON = false){
+    switch(type){
+        case 'https://schema.org/Number':
+            return Number(str);
+        case 'https://schema.org/Integer':
+            return parseInt(str);
+        case 'https://schema.org/Float':
+            return parseFloat(str);
+        case 'https://schema.org/DateTime':
+            return new Date(str);
+
+    }
+    if(tryJSON){
+        if(str === jsonArrAttr || str === jsonObjAttr) return str;
+        try{
+            return JSON.parse(str);
+        }catch(e){
+            return str;
         }
+    }else{
+        return str;
+    }
+    
+}
 
-    };
+const propTests: Array<PropTypes> = ['href', 'content', 'value', 'dateTime', 'textContent'];
 
+const jsonObjAttr = '{...}';
+const jsonArrAttr = '[...]';
+
+export class BeValueAdded extends BE<BVAAllProps, BVAActions> implements BVAActions{
     #mutationObserver: MutationObserver | undefined;
     #skipParsingAttrOrTextContentChange = false;
     #skipSettingAttr = false;
@@ -49,6 +60,36 @@ export class BeValueAdded extends BE<Element> implements BVAActions{
         
     }
 
+    obs(self: this){
+        const {enhancedElement, mutOptions} = self;
+        self.#mutationObserver = new MutationObserver((/*mutations: MutationRecord[]*/) => {
+            //console.log('in mut observer event');
+            if(self.#skipParsingAttrOrTextContentChange){
+                self.#skipParsingAttrOrTextContentChange = false;
+                return;
+            }
+            Object.assign(self, self.parseAttr(self));
+        });
+        self.#mutationObserver.observe(enhancedElement, mutOptions);
+    }
+
+    obsTC(self: this){
+        return {
+            mutOptions:{
+                childList: true
+            }
+        } as BVAP;
+    }
+
+    obsAttr(self: this){
+        return {
+            mutOptions: {
+                attributeFilter: [self.attr],
+                attributes: true
+            }
+        } as BVAP;
+    }
+
     get attr(): PropTypes {
         const {enhancedElement} = this;
         for(const prop of propTests){
@@ -56,6 +97,12 @@ export class BeValueAdded extends BE<Element> implements BVAActions{
         }
         return 'textContent';
     }
+
+    override detach(detachedElement: Element): void {
+        if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
+    }
+
+
 
     parseAttr(self: this): Partial<BVAAllProps> {
         const {enhancedElement, attr} = self;
@@ -133,40 +180,6 @@ export class BeValueAdded extends BE<Element> implements BVAActions{
         }
     }
 
-    obs(self: this){
-        const {enhancedElement, mutOptions} = self;
-        self.#mutationObserver = new MutationObserver((/*mutations: MutationRecord[]*/) => {
-            //console.log('in mut observer event');
-            if(self.#skipParsingAttrOrTextContentChange){
-                self.#skipParsingAttrOrTextContentChange = false;
-                return;
-            }
-            Object.assign(self, self.parseAttr(self));
-        });
-        self.#mutationObserver.observe(enhancedElement, mutOptions);
-    }
-
-    obsTC(self: this){
-        return {
-            mutOptions:{
-                childList: true
-            }
-        } as BVAP;
-    }
-
-    obsAttr(self: this){
-        return {
-            mutOptions: {
-                attributeFilter: [self.attr],
-                attributes: true
-            }
-        } as BVAP;
-    }
-
-    override async detach(detachedElement: Element) {
-        if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
-    }
-
     onValChange(self: this) {
         const {value, valueFromTextContent} = self;
         if(value === undefined || value === null){
@@ -193,34 +206,54 @@ export class BeValueAdded extends BE<Element> implements BVAActions{
     }
 }
 
-function parseVal(str: string, type: string | null, tryJSON = false){
-    switch(type){
-        case 'https://schema.org/Number':
-            return Number(str);
-        case 'https://schema.org/Integer':
-            return parseInt(str);
-        case 'https://schema.org/Float':
-            return parseFloat(str);
-        case 'https://schema.org/DateTime':
-            return new Date(str);
 
-    }
-    if(tryJSON){
-        if(str === jsonArrAttr || str === jsonObjAttr) return str;
-        try{
-            return JSON.parse(str);
-        }catch(e){
-            return str;
-        }
-    }else{
-        return str;
-    }
-    
-}
 
 export interface BeValueAdded extends BVAAllProps{}
 
-const propTests: Array<PropTypes> = ['href', 'content', 'value', 'dateTime', 'textContent'];
+export const beValueAddedPropDefaults: Partial<BVAAllProps> = {
+    attached: true,
+}
 
-const jsonObjAttr = '{...}';
-const jsonArrAttr = '[...]';
+export const beValueAddedPropInfo: Partial<{[key in keyof BVAAllProps]: PropInfoExt<IEnhancement>}> = {
+    ...propInfo,
+    value:{
+        notify:{
+            dispatch: true,
+        }
+    }
+};
+
+export const beValueAddedActions: Partial<{[key in keyof BVAActions]: Action<BVAAllProps> | keyof BVAAllProps}> = {
+    hydrate: 'attached',
+    onValChange:{
+        ifKeyIn: ['value']
+    },
+    obsTC: {
+        ifAllOf: ['beVigilant', 'valueFromTextContent'],
+    },
+    obsAttr:{
+        ifAllOf: ['beVigilant'],
+        ifNoneOf: ['valueFromTextContent']
+    },
+    obs: 'mutOptions',
+};
+
+export const tagName = 'be-value-added';
+
+
+const xe = new XE<BVAAllProps, BVAActions>({
+    config:{
+        tagName,
+        isEnh: true,
+        propDefaults:{
+            ...beValueAddedPropDefaults
+        },
+        propInfo:{
+            ...beValueAddedPropInfo
+        },
+        actions:{
+            ...beValueAddedActions
+        }
+    },
+    superclass: BeValueAdded
+});
