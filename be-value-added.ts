@@ -10,7 +10,12 @@ export class BeValueAdded extends BE<Element> implements BVAActions{
             attached: {
                 def: true,
                 ro: true,
-            }
+            },
+            value: {},
+            resolved: {
+                def: false,
+            },
+            valueFromTextContent: {}
         },
         actions: {
             hydrate: {

@@ -5,7 +5,12 @@ export class BeValueAdded extends BE {
             attached: {
                 def: true,
                 ro: true,
-            }
+            },
+            value: {},
+            resolved: {
+                def: false,
+            },
+            valueFromTextContent: {}
         },
         actions: {
             hydrate: {
