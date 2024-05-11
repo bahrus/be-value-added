@@ -1,15 +1,14 @@
 import { BE } from 'be-enhanced/BE.js';
+import { config } from 'be-enhanced/config.js';
 export class BeValueAdded extends BE {
     static config = {
         propInfo: {
+            ...(config.propInfo),
             attached: {
                 def: true,
                 ro: true,
             },
             value: {},
-            resolved: {
-                def: false,
-            },
             valueFromTextContent: {}
         },
         actions: {
@@ -29,7 +28,10 @@ export class BeValueAdded extends BE {
             obs: {
                 ifAllOf: ['mutOptions']
             },
-        }
+        },
+        positractions: [
+            ...(config.positractions)
+        ]
     };
     #mutationObserver;
     #skipParsingAttrOrTextContentChange = false;
