@@ -3,12 +3,11 @@ import {BE, BEConfig} from 'be-enhanced/BE.js';
 import {BVAActions, BVAAllProps, BVAP, PropTypes, } from './types';
 import { Positractions, PropInfo } from 'trans-render/froop/types';
 import {IEnhancement,  BEAllProps} from 'trans-render/be/types';
-import {config} from 'be-enhanced/config.js';
 
 export class BeValueAdded extends BE<Element> implements BVAActions{
     static override config: BEConfig<BVAP & BEAllProps, BVAActions & IEnhancement, any> = {
         propInfo: {
-            ...(config.propInfo),
+            ...(beCnfg.propInfo),
             attached: {
                 def: true,
                 ro: true,
@@ -35,7 +34,7 @@ export class BeValueAdded extends BE<Element> implements BVAActions{
             },
         },
         positractions:[
-            ...(config.positractions!)
+            ...(beCnfg.positractions!)
         ]
 
     };
