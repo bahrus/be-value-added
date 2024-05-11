@@ -1,9 +1,9 @@
+import { config as beCnfg } from 'be-enhanced/config.js';
 import { BE } from 'be-enhanced/BE.js';
-import { config } from 'be-enhanced/config.js';
 export class BeValueAdded extends BE {
     static config = {
         propInfo: {
-            ...(config.propInfo),
+            ...(beCnfg.propInfo),
             attached: {
                 def: true,
                 ro: true,
@@ -30,7 +30,7 @@ export class BeValueAdded extends BE {
             },
         },
         positractions: [
-            ...(config.positractions)
+            ...(beCnfg.positractions)
         ]
     };
     #mutationObserver;
