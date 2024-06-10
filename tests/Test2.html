@@ -23,17 +23,17 @@
     </script>
     <script type=module>
         import 'be-enhanced/beEnhanced.js';
-        import '../behance.js';
+        import '../behivior.js';
     </script>
     <script type=module>
+        const num = 13456789;
         function validate(){
-            const num = 13456789;
             if(data.textContent === num.toLocaleString()){
                 target.setAttribute('mark', 'good');
             }
         }
         await customElements.whenDefined('be-enhanced');
-        data.beEnhanced.by.beValueAdded.value = 13456789;
+        data.beEnhanced.by.beValueAdded.value = num;
         setTimeout(() => {
             validate();
         }, 500);
