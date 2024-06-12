@@ -7,7 +7,7 @@ export const emc = {
     },
     enhPropKey: 'beValueAdded',
     importEnh: async () => {
-        const { BeValueAdded } = await import('./behance.js');
+        const { BeValueAdded } = await import('./be-value-added.js');
         return BeValueAdded;
     }
 };

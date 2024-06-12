@@ -1,6 +1,6 @@
 import { config as beCnfg } from 'be-enhanced/config.js';
 import { BE } from 'be-enhanced/BE.js';
-export class BeValueAdded extends BE {
+class BeValueAdded extends BE {
     static config = {
         propInfo: {
             ...(beCnfg.propInfo),
@@ -213,6 +213,8 @@ function parseVal(str, type, tryJSON = false) {
         return str;
     }
 }
+await BeValueAdded.bootUp();
 const propTests = ['href', 'content', 'value', 'dateTime', 'textContent'];
 const jsonObjAttr = '{...}';
 const jsonArrAttr = '[...]';
+export { BeValueAdded };

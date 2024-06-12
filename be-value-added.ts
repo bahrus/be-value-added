@@ -4,7 +4,7 @@ import {BVAActions, BVAAllProps, BVAP, PropTypes, } from './types';
 import { Positractions, PropInfo } from 'trans-render/froop/types';
 import {IEnhancement,  BEAllProps} from 'trans-render/be/types';
 
-export class BeValueAdded extends BE<Element> implements BVAActions{
+class BeValueAdded extends BE<Element> implements BVAActions{
     static override config: BEConfig<BVAP & BEAllProps, BVAActions & IEnhancement, any> = {
         propInfo: {
             ...(beCnfg.propInfo),
@@ -224,9 +224,13 @@ function parseVal(str: string, type: string | null, tryJSON = false){
     
 }
 
-export interface BeValueAdded extends BVAAllProps{}
+interface BeValueAdded extends BVAAllProps{}
+
+await BeValueAdded.bootUp();
 
 const propTests: Array<PropTypes> = ['href', 'content', 'value', 'dateTime', 'textContent'];
 
 const jsonObjAttr = '{...}';
 const jsonArrAttr = '[...]';
+
+export {BeValueAdded}
