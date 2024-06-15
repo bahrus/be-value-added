@@ -1,8 +1,9 @@
 import {config as beCnfg} from 'be-enhanced/config.js';
 import {BE, BEConfig} from 'be-enhanced/BE.js';
 import {BVAActions, BVAAllProps, BVAP, PropTypes, } from './types';
-import { Positractions, PropInfo } from 'trans-render/froop/types';
+import { Positraction, Positractions, PropInfo } from 'trans-render/froop/types';
 import {IEnhancement,  BEAllProps} from 'trans-render/be/types';
+import {dispatchEvent} from 'trans-render/positractions/dispatchEvent.js'
 
 class BeValueAdded extends BE<Element> implements BVAActions{
     static override config: BEConfig<BVAP & BEAllProps, BVAActions & IEnhancement, any> = {
@@ -34,11 +35,16 @@ class BeValueAdded extends BE<Element> implements BVAActions{
             },
         },
         positractions:[
-            ...(beCnfg.positractions!)
+            ...(beCnfg.positractions!) as Positractions<BVAP & BEAllProps, BVAActions & IEnhancement>,
+            {
+                do: 'de',
+                ifKeyIn: ['value'],
+                pass: ['$0+', '`value`']
+            }
         ]
 
     };
-
+    de = dispatchEvent
     #mutationObserver: MutationObserver | undefined;
     #skipParsingAttrOrTextContentChange = false;
     #skipSettingAttr = false;

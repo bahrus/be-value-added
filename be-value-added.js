@@ -1,5 +1,6 @@
 import { config as beCnfg } from 'be-enhanced/config.js';
 import { BE } from 'be-enhanced/BE.js';
+import { dispatchEvent } from 'trans-render/positractions/dispatchEvent.js';
 class BeValueAdded extends BE {
     static config = {
         propInfo: {
@@ -30,9 +31,15 @@ class BeValueAdded extends BE {
             },
         },
         positractions: [
-            ...(beCnfg.positractions)
+            ...(beCnfg.positractions),
+            {
+                do: 'de',
+                ifKeyIn: ['value'],
+                pass: ['$0+', '`value`']
+            }
         ]
     };
+    de = dispatchEvent;
     #mutationObserver;
     #skipParsingAttrOrTextContentChange = false;
     #skipSettingAttr = false;
