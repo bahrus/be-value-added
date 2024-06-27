@@ -11,13 +11,13 @@
     "update": "ncu -u && npm install"
   },
   "dependencies": {
-    "be-enhanced": "0.0.101",
-    "be-hive": "0.0.178",
-    "trans-render": "0.0.782"
+    "be-enhanced": "0.0.103",
+    "be-hive": "0.0.180",
+    "trans-render": "0.0.787"
   },
   "devDependencies": {
     "may-it-serve": "0.0.6",
-    "@playwright/test": "1.44.1"
+    "@playwright/test": "1.45.0"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT"
