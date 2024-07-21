@@ -28,6 +28,8 @@ The elements be-value-added supports are many of the special elements used by mi
 
 Anyway, the model / precedent that the output element provides seems quite useful, when applied to elements that may do a bit more than simply display the value.  In particular, elements that format the value, based on Intl.* settings, or elements that reflect values to metadata attributes (meta, link tags).
 
+## Setting the value programmatically
+
 ```html
 <time id=time  be-value-added></time>
 <data id=data  be-value-added></data>
@@ -36,13 +38,21 @@ Anyway, the model / precedent that the output element provides seems quite usefu
 ...
 
 <script type=module>
-    const {emc} = await import('be-value-added/behivior.js'));
-    await time.whenResolved(emc).value = new Date();
-    await data.whenResolved(emc).value = 13456789;
-    await meta.whenResolved(emc).value = 'hello';
-    await link.whenResolved(emc).value = true;
+    const {emc} = await import('be-value-added/behivior.js');
+    (await time[be].whenResolved(emc)).value = new Date();
+    (await data[be].whenResolved(emc)).value = 13456789;
+    (await meta[be].whenResolved(emc)).value = 'hello';
+    (await link[be].whenResolved(emc)).value = true;
 </script>
 ```
+
+There are other ways to set the value programmatically, if you wait for the dependencies to load, such as:
+
+```JavaScript
+time.beEnhanced.by.beValueAdded.value = new Date();
+```
+
+Note that other binding-related enhancements in the *be-enhanced* family of enhancements, such as [be-observant](https://github.com/bahrus/be-observant) or [be-switched](https://github.com/bahrus/be-switched) automatically attaches the enhancement when applicable, so it is quite possible to use this enhancement in a declarative way.
 
 Where values are displayed (for the data and time tags above), the user will see the .toLocale... value.  To customize the international settings, use [https://github.com/bahrus/be-intl](be-intl) enhancement that enhances this enhancement.
 
@@ -56,11 +66,11 @@ This is the canonical name.  In less formal settings, where there is little chan
 ...
 
 <script type=module>
-    const {emc} = await import('be-value-added/📶.js'));
-    await time.whenResolved(emc).value = new Date();
-    await data.whenResolved(emc).value = 13456789;
-    await meta.whenResolved(emc).value = 'hello';
-    await link.whenResolved(emc).value = true;
+    const {emc} = await import('be-value-added/📶.js');
+    (await time[be].whenResolved(emc)).value = new Date();
+    (await data[be].whenResolved(emc)).value = 13456789;
+    (await meta[be].whenResolved(emc)).value = 'hello';
+    (await link[be].whenResolved(emc)).value = true;
 </script>
 ```
 

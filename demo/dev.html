@@ -23,16 +23,14 @@
             }
         }
     </script>
+
     <script type=module>
-        import 'be-enhanced/beEnhanced.js';
-        import '../be-value-added.js';
-    </script>
-    <script type=module>
-        await customElements.whenDefined('be-enhanced');
-        time.beEnhanced.by.beValueAdded.value = new Date();
-        data.beEnhanced.by.beValueAdded.value = 13456789;
-        meta.beEnhanced.by.beValueAdded.value = 'hello';
-        link.beEnhanced.by.beValueAdded.value = true;
+        const {emc} = await import('/📶.js');
+        const be = 'beEnhanced';
+        (await time[be].whenResolved(emc)).value = new Date();
+        (await data[be].whenResolved(emc)).value = 13456789;
+        (await meta[be].whenResolved(emc)).value = 'hello';
+        (await link[be].whenResolved(emc)).value = true;
     </script>
 </body>
 </html>
