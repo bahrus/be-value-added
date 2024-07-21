@@ -1,11 +1,14 @@
-# be-value-added
+# be-value-added (📶)
+
+(The name of that emoji is "antenna bars").
+
 
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-value-added?style=for-the-badge)](https://bundlephobia.com/result?p=be-value-added)
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-value-added?compression=gzip">
 [![NPM version](https://badge.fury.io/js/be-value-added.png)](http://badge.fury.io/js/be-value-added)
 [![Playwright Tests](https://github.com/bahrus/be-value-added/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-value-added/actions/workflows/CI.yml)
 
-Enhances most built-in elements with a "value" property, which other enhancements use to provide formatting.  Adds two-way binding support between this "value" property and a key property, in some cases.
+*be-value*added* is a [be-enhanced](https://github.com/bahrus/be-enhanced) based enhancement that enhances most built-in elements with a "value" property, which other enhancements use to provide formatting.  Adds two-way binding support between this "value" property and a key property of the enhanced element, in some cases.
 
 The [output element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) provides an example of a built-in element that "outputs" its value.  It's a bit of a strange creature, given that it displays the exact value passed in, but the "value-add" proposition the output element provides may be a bit esoteric (a11y related).
 
@@ -31,16 +34,33 @@ Anyway, the model / precedent that the output element provides seems quite usefu
 <meta id=meta  be-value-added>
 <link id=link  be-value-added>
 ...
+
 <script type=module>
-    import 'be-enhanced/beEnhanced.js';
-    import '../be-value-added.js';
+    const {emc} = await import('be-value-added/behivior.js'));
+    await time.whenResolved(emc).value = new Date();
+    await data.whenResolved(emc).value = 13456789;
+    await meta.whenResolved(emc).value = 'hello';
+    await link.whenResolved(emc).value = true;
 </script>
+```
+
+Where values are displayed (for the data and time tags above), the user will see the .toLocale... value.  To customize the international settings, use [https://github.com/bahrus/be-intl](be-intl) enhancement that enhances this enhancement.
+
+This is the canonical name.  In less formal settings, where there is little chance of collision with other libraries, you can reference 📶.js instead and use the much shorter syntax:
+
+```html
+<time id=time  📶></time>
+<data id=data  📶></data>
+<meta id=meta  📶>
+<link id=link  📶>
+...
+
 <script type=module>
-    await customElements.whenDefined('be-enhanced');
-    time.beEnhanced.by.beValueAdded.value = new Date();
-    data.beEnhanced.by.beValueAdded.value = 13456789;
-    meta.beEnhanced.by.beValueAdded.value = 'hello';
-    link.beEnhanced.by.beValueAdded.value = true;
+    const {emc} = await import('be-value-added/📶.js'));
+    await time.whenResolved(emc).value = new Date();
+    await data.whenResolved(emc).value = 13456789;
+    await meta.whenResolved(emc).value = 'hello';
+    await link.whenResolved(emc).value = true;
 </script>
 ```
 
