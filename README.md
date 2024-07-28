@@ -56,7 +56,7 @@ Note that other binding-related enhancements in the *be-enhanced* family of enha
 
 Where values are displayed (for the data and time tags above), the user will see the .toLocale... value.  To customize the international settings, use [https://github.com/bahrus/be-intl](be-intl) enhancement that enhances this enhancement.
 
-This is the canonical name.  In less formal settings, where there is little chance of collision with other libraries, you can reference [📶.js]() instead and use the much shorter syntax:
+This is the canonical name.  In less formal settings, where there is little chance of collision with other libraries, you can reference [📶.js](https://github.com/bahrus/be-value-added/blob/baseline/%F0%9F%93%B6.js) instead and use the much shorter syntax:
 
 ```html
 <time id=time  📶></time>
@@ -73,6 +73,8 @@ This is the canonical name.  In less formal settings, where there is little chan
     (await link[be].whenResolved(emc)).value = true;
 </script>
 ```
+
+The link above demonstrates how easy it is to define your own name.
 
 This will display the date and number in locale string format, and the meta and link tags in a microdata compatible way.
 
