@@ -8,13 +8,17 @@
 [![NPM version](https://badge.fury.io/js/be-value-added.png)](http://badge.fury.io/js/be-value-added)
 [![Playwright Tests](https://github.com/bahrus/be-value-added/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-value-added/actions/workflows/CI.yml)
 
-*be-value*added* is a [be-enhanced](https://github.com/bahrus/be-enhanced) based enhancement that enhances most built-in elements with a "value" property, which other enhancements use to provide formatting.  Adds two-way binding support between this "value" property and a key property of the enhanced element, in some cases.
+*be-value-added* is a [be-enhanced](https://github.com/bahrus/be-enhanced) based enhancement that enhances most built-in elements with a "value" property, and which adds support for formatting when semantically appropriate.  It adds two-way binding support between this "value" property and a key property of the enhanced element, in some cases.
 
 The [output element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) provides an example of a built-in element that "outputs" its value.  It's a bit of a strange creature, given that it displays the exact value passed in, but the "value-add" proposition the output element provides may be a bit esoteric (a11y related).
 
-The "value" property this enhancement adds is accessible via oElement.beEnhanced.beValueAdded.value.
+## HTML signals
 
-The elements be-value-added supports are many of the special elements used by microdata:
+Anyway, the model / precedent that the output element provides seems quite useful, when applied to elements that may do a bit more than simply display the value.  In particular, elements that format the value, based on Intl.* settings, or elements that reflect values to metadata attributes (meta, link tags).
+
+The "value" property this enhancement adds is accessible via oElement.beEnhanced.beValueAdded.value, and changes to the value can be subscribed to using addEventListener.
+
+The elements be-value-added adds formatting support are many of the special elements used by microdata:
 
 | Element        | Binding property/attribute         
 |----------------|------------------------------------|
@@ -23,10 +27,6 @@ The elements be-value-added supports are many of the special elements used by mi
 | meta           | content/content                    |
 | data           | value/value                        |
 
-
-## HTML signals
-
-Anyway, the model / precedent that the output element provides seems quite useful, when applied to elements that may do a bit more than simply display the value.  In particular, elements that format the value, based on Intl.* settings, or elements that reflect values to metadata attributes (meta, link tags).
 
 ## Setting the value programmatically
 
@@ -56,7 +56,7 @@ Note that other binding-related enhancements in the *be-enhanced* family of enha
 
 Where values are displayed (for the data and time tags above), the user will see the .toLocale... value.  To customize the international settings, use [https://github.com/bahrus/be-intl](be-intl) enhancement that enhances this enhancement.
 
-This is the canonical name.  In less formal settings, where there is little chance of collision with other libraries, you can reference 📶.js instead and use the much shorter syntax:
+This is the canonical name.  In less formal settings, where there is little chance of collision with other libraries, you can reference [📶.js]() instead and use the much shorter syntax:
 
 ```html
 <time id=time  📶></time>

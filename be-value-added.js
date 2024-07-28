@@ -1,16 +1,17 @@
+// @ts-check
 import { config as beCnfg } from 'be-enhanced/config.js';
 import { BE } from 'be-enhanced/BE.js';
 import { dispatchEvent } from 'trans-render/positractions/dispatchEvent.js';
 /** @import {BEConfig, IEnhancement, BEAllProps} from './node_modules/be-enhanced/types.d.ts' */
-/** @import {Actions, PAP, AllProps, AP} from './types.d.ts' */;
+/** @import {BVAActions, BVAAllProps, BVAP} from './types.d.ts' */;
 
 /**
- * @implements {Actions}
+ * @implements {BVAActions}
  * 
  */
 class BeValueAdded extends BE {
     /**
-     * @type {BEConfig<AP & BEAllProps, Actions & IEnhancement, any>}
+     * @type {BEConfig<BVAP & BEAllProps, BVAActions & IEnhancement, any>}
      */
     static config = {
         propInfo: {
@@ -77,20 +78,20 @@ class BeValueAdded extends BE {
             valueFromTextContent: attr === 'textContent'
         };
         if (attr === 'textContent') {
-            return {
+            return /** @type {BVAP} */ ({
                 value: enhancedElement.textContent,
                 ...returnObj
-            };
+            });
         }
         self.#skipSettingAttr = true;
         switch (attr) {
             case 'content': {
                 const type = enhancedElement.getAttribute('itemtype');
                 const content = enhancedElement.content;
-                return {
+                return /** @type {BVAP} */ ({
                     value: parseVal(content, type, true),
                     ...returnObj
-                };
+                });
             }
             case 'href': {
                 const { href } = enhancedElement;
@@ -99,27 +100,27 @@ class BeValueAdded extends BE {
                     const lastVal = split.at(-1);
                     switch (lastVal) {
                         case 'True':
-                            return {
+                            return /** @type {BVAP} */ ({
                                 value: true,
                                 ...returnObj
-                            };
+                            });
                         case 'False':
-                            return {
+                            return /** @type {BVAP} */ ({
                                 value: false,
                                 ...returnObj
-                            };
+                            });
                         default:
-                            return {
+                            return /** @type {BVAP} */ ({
                                 value: lastVal,
                                 ...returnObj
-                            };
+                            });
                     }
                 }
                 else {
-                    return {
+                    return /** @type {BVAP} */ ({
                         value: href,
                         ...returnObj,
-                    };
+                    });
                 }
             }
             case 'dateTime': {
@@ -127,23 +128,23 @@ class BeValueAdded extends BE {
                 if (!currVal) {
                     this.#skipSettingAttr = false;
                 }
-                return {
+                return /** @type {BVAP} */ ({
                     value: new Date(currVal),
                     ...returnObj
-                };
+                });
             }
             case 'value': {
                 const type = enhancedElement.getAttribute('itemtype');
                 const content = enhancedElement.value;
-                return {
+                return /** @type {BVAP} */ ({
                     value: parseVal(content, type, true),
                     ...returnObj
-                };
+                });
             }
         }
-        return {
+        return /** @type {BVAP} */({
             resolved: false,
-        };
+        });
     }
     obs(self) {
         const { enhancedElement, mutOptions } = self;

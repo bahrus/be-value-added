@@ -23,8 +23,8 @@ export interface BVAAllProps extends BVAEndUserProps{
 export type BVAP = Partial<BVAAllProps>
 
 export interface BVAActions{
-    hydrate(self: this): BVAP;
-    parseAttr(self: this): BVAP;
+    hydrate(self: BVAAllProps): BVAP;
+    parseAttr(self: BVAAllProps): BVAP;
     onValChange(self: this): void;
     obs(self: this): void;
     obsTC(self: this): BVAP;
