@@ -1,13 +1,21 @@
+// @ts-check
 import { BeHive, seed, MountObserver } from 'be-hive/be-hive.js';
-const base = 'be-value-added';
+/** @import {EMC} from './node_modules/trans-render/be/types.d.ts' */
+
+/**
+ * @type {EMC}
+ */
 export const emc = {
-    base,
+    base: 'be-value-added',
     map: {
         '0.0': 'ni'
     },
     enhPropKey: 'beValueAdded',
     importEnh: async () => {
-        const { BeValueAdded } = await import('./be-value-added.js');
+        const { BeValueAdded } = 
+        /** @type {{new(): IEnhancement<Element>}} */ 
+        /** @type {any} */
+        (await import('./be-value-added.js'));
         return BeValueAdded;
     }
 };

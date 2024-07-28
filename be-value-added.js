@@ -1,7 +1,17 @@
 import { config as beCnfg } from 'be-enhanced/config.js';
 import { BE } from 'be-enhanced/BE.js';
 import { dispatchEvent } from 'trans-render/positractions/dispatchEvent.js';
+/** @import {BEConfig, IEnhancement, BEAllProps} from './node_modules/be-enhanced/types.d.ts' */
+/** @import {Actions, PAP, AllProps, AP} from './types.d.ts' */;
+
+/**
+ * @implements {Actions}
+ * 
+ */
 class BeValueAdded extends BE {
+    /**
+     * @type {BEConfig<AP & BEAllProps, Actions & IEnhancement, any>}
+     */
     static config = {
         propInfo: {
             ...(beCnfg.propInfo),
