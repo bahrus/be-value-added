@@ -2,7 +2,7 @@
 import { config as beCnfg } from 'be-enhanced/config.js';
 import { BE } from 'be-enhanced/BE.js';
 import { dispatchEvent } from 'trans-render/positractions/dispatchEvent.js';
-/** @import {BEConfig, IEnhancement, BEAllProps} from './node_modules/be-enhanced/types.d.ts' */
+/** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
 /** @import {BVAActions, BVAAllProps, BVAP} from './types.d.ts' */;
 
 /**
