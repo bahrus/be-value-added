@@ -4,6 +4,27 @@
   "description": "The output element provides an example of a built-in element that \"outputs\" its value.  It's a bit of a strange feature, given that it displays the exact value passed in, but the \"value-add\" proposition the output element provides may be bit esoteric (a11y related).",
   "main": "be-value-added.js",
   "module": "be-value-added.js",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "custom-element",
+    "custom-elements",
+    "decorator",
+    "enhancement",
+    "behavior",
+    "directive",
+    "custom-attribute"
+  ],
+  "exports": {
+    ".": "./be-value-added.js",
+    "./be-value-added.js": "./be-value-added.js"
+  },
+  "files": [
+    "*.js",
+    "types.d.ts",
+    "ts-refs/*"
+  ],
+  "types": "index.d.ts",
   "scripts": {
     "test": "playwright test",
     "serve": "node node_modules/may-it-serve/serve.js",
@@ -11,13 +32,13 @@
     "update": "ncu -u && npm install"
   },
   "dependencies": {
-    "be-enhanced": "0.0.117",
-    "be-hive": "0.0.197",
-    "trans-render": "0.0.804"
+    "be-enhanced": "0.0.131",
+    "be-hive": "0.0.201",
+    "trans-render": "0.0.821"
   },
   "devDependencies": {
     "may-it-serve": "0.0.8",
-    "@playwright/test": "1.45.3"
+    "@playwright/test": "1.46.0"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT"

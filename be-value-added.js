@@ -1,5 +1,5 @@
 // @ts-check
-import { config as beCnfg } from 'be-enhanced/config.js';
+import { propInfo, rejected, resolved } from 'be-enhanced/cc.js';
 import { BE } from 'be-enhanced/BE.js';
 import { dispatchEvent } from 'trans-render/positractions/dispatchEvent.js';
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
@@ -15,7 +15,7 @@ class BeValueAdded extends BE {
      */
     static config = {
         propInfo: {
-            ...(beCnfg.propInfo),
+            ...propInfo,
             attached: {
                 def: true,
                 ro: true,
@@ -42,7 +42,8 @@ class BeValueAdded extends BE {
             },
         },
         positractions: [
-            ...(beCnfg.positractions),
+            resolved, 
+            rejected,
             {
                 do: 'de',
                 ifKeyIn: ['value'],
